@@ -1,14 +1,11 @@
 import React from 'react';
-import "./global.css"
 import { NavigationContainer } from '@react-navigation/native';
-import { View } from 'react-native';
-
-
-
+import TabNavigator from './src/navigation/TabNavigator';
+import './global.css';
 export default function App() {
   return (
-    <View className="flex-1">
-      {/* <TabNavigator /> */}
-    </View>
+    <NavigationContainer>
+      <TabNavigator />
+    </NavigationContainer>
   );
 }

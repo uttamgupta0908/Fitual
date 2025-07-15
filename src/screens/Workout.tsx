@@ -1,14 +1,10 @@
-import { Text, View } from 'react-native'
-import React, { Component } from 'react'
+import { View, Text } from 'react-native'
+import React from 'react'
 
-export class Workout extends Component {
-  render() {
-    return (
-      <View>
-        <Text>Workout</Text>
-      </View>
-    )
-  }
+export default function Workout() {
+  return (
+    <View>
+      <Text>Workout</Text>
+    </View>
+  )
 }
-
-export default Workout
