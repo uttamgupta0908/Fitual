@@ -5,9 +5,7 @@ const ExerciseDetail = () => {
   const route = useRoute();
   const { id } = route.params as { id: string };
 
-  return (
-    <Text>Exercise ID: {id}</Text>
-  );
+  return <Text>Exercise ID: {id}</Text>;
 };
 
 export default ExerciseDetail;
