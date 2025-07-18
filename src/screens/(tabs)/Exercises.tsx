@@ -14,12 +14,17 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function Exercises() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchExercises = async () => {
     try {
+      ///fetcch the exercises from your API or database
       const exercises = await client.fetch(exercisesQuery);
+      setExercises(exercises);
+      setFilteredExercises(exercises);
     } catch (error) {}
   };
 
@@ -29,7 +34,7 @@ export default function Exercises() {
     setRefreshing(false);
   };
   return (
-    <SafeAreaView className=" felx-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-gray-50">
       {/* HEADER */}
       <View className="px-6 py-4 bg-white border-b border-gray-200">
         <Text className="text-2xl font-bold text-gray-900">

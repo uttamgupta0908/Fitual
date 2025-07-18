@@ -11,56 +11,19 @@ import {
   CircleUserRound,
 } from 'lucide-react-native';
 import { View, Text } from 'react-native';
-import Home from '../screens/Home';
-import Exercises from '../screens/Exercises';
-import Workout from '../screens/Workout';
-import History from '../screens/History';
-import Profile from '../screens/Profile';
+import Home from '../screens/(tabs)/Home';
+import Exercises from '../screens/(tabs)/Exercises';
+import Workout from '../screens/(tabs)/Workout';
+import History from '../screens/(tabs)/History';
+import Profile from '../screens/(tabs)/Profile';
 
 const Tab = createBottomTabNavigator();
 
-// const HomeScreen = () => (
-//   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//     <Text>Home Screen</Text>
-//   </View>
-// );
-
-// const ExerciseScreen = () => (
-//   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//     <Text>Exercise Screen</Text>
-//   </View>
-// );
-// const WorkoutScreen = () => (
-//   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//     <Text>Workout Screen</Text>
-//   </View>
-// );
-// const ProfileScreen = () => (
-//   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//     <Text>Profile Screen</Text>
-//   </View>
-// );
-
-// const HistoryScreen = () => (
-//   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//     <Text>History Screen</Text>
-//   </View>
-// );
-
-const App = () => {
+const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        // tabBarIcon: ({ color, size }) => {
-        //   if (route.name === 'Home') {
-        //     return <HomeIcon color={color} size={size} />;
-        //   } else if (route.name === 'History') {
-        //     return <HistoryIcon color={color} size={size} />;
-        //   } else {
-        //     return <User color={color} size={size} />;
-        //   }
-        // },
         tabBarActiveTintColor: 'blue',
         tabBarInactiveTintColor: 'gray',
         tabBarBackground: () => (
@@ -125,4 +88,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default TabNavigator;
