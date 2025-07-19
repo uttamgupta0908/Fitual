@@ -6,16 +6,17 @@ import {
   FlatList,
   RefreshControl,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CircleX, HeartPulse, Icon, Search } from 'lucide-react-native';
 import { SearchBar } from 'react-native-screens';
 import { useNavigation } from '@react-navigation/native';
+import ExerciseCard from '../../components/ExerciseCard';
 
 export default function Exercises() {
   const [searchQuery, setSearchQuery] = useState('');
   const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
+  const [filteredExercises, setFilteredExercises] = useState([]);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -25,8 +26,21 @@ export default function Exercises() {
       const exercises = await client.fetch(exercisesQuery);
       setExercises(exercises);
       setFilteredExercises(exercises);
-    } catch (error) {}
+    } catch (error) {
+      console.log('Error fetching exercise:', error);
+    }
   };
+
+  useEffect(() => {
+    fetchExercises();
+  }, []);
+
+  useEffect(() => {
+    const filtered = exercises.filter((exercise: Exercise) =>
+      exercise.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+    setFilteredExercises(filtered);
+  }, [searchQuery, exercises]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -59,7 +73,7 @@ export default function Exercises() {
         </View>
       </View>
       <FlatList
-        data={[]}
+        data={[filteredExercises]}
         keyExtractor={item => item._id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ padding: 24 }}
