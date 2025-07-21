@@ -5,7 +5,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import TabNavigator from './TabNavigator';
 import AuthLayout from '../screens/(auth)/index'; // Adjust the import path as necessary
+
 import { storage } from '../storage/mmkv'; // Adjust path as needed
+import ExerciseDetail from '../components/ExerciseDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +26,19 @@ export default function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isSignedIn ? (
-        <Stack.Screen name="(tabs)" component={TabNavigator} />
+        <>
+          <Stack.Screen name="(tabs)" component={TabNavigator} />
+          <Stack.Screen
+            name="ExerciseDetail"
+            component={ExerciseDetail}
+            options={{
+              headerShown: false,
+              presentation: 'modal',
+              gestureEnabled: true,
+              animationTypeForReplace: 'push',
+            }}
+          />
+        </>
       ) : (
         <Stack.Screen name="(auth)" component={AuthLayout} />
       )}
