@@ -29,3 +29,9 @@ Fitual is a modern fitness app built with **React Native CLI**, designed to help
 ```sh
 npm install
 ```
+
+npm start
+
+```
+npm run android
+```
