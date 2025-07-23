@@ -54,8 +54,9 @@ JWT_SECRET="your_jwt_secret"
 
 Coming Soon... (You can add screenshots here)
 
-🙌 Credits
-Fitual is crafted with ❤️ by [Your Name]
+### 🙌 Credits
+
+Fitual is crafted with ❤️ by [Uttam]
 Icons powered by Lucide Icons
 Inspiration from modern fitness UIs.
 
@@ -64,12 +65,3 @@ Inspiration from modern fitness UIs.
 ---
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-Let me know if you want sections like:
-
-- GitHub badges
-- API documentation
-- Contributor guide
-- Deployment instructions (Expo / EAS)
-
-I can include those too.
