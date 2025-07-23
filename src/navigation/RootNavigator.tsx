@@ -8,39 +8,42 @@ import AuthLayout from '../screens/(auth)/index'; // Adjust the import path as n
 
 import { storage } from '../storage/mmkv'; // Adjust path as needed
 import ExerciseDetail from '../components/ExerciseDetail';
+import { AuthProvider, useAuth } from '../context/AuthContext';
+import { ActivityIndicator, View } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
 export default function RootNavigator() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  const { isLoggedIn, isLoading } = useAuth();
 
-  useEffect(() => {
-    checkToken();
-  }, []);
-
-  const checkToken = async () => {
-    const token = await storage.getString('authToken');
-    setIsSignedIn(!!token);
-  };
-
+  if (isLoading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+  // {
+  //   /* <Stack.Screen
+  //   name="ExerciseDetail"
+  //   component={ExerciseDetail}
+  //   options={{
+  //     headerShown: false,
+  //     presentation: 'modal',
+  //     gestureEnabled: true,
+  //     animationTypeForReplace: 'push',
+  //   }}
+  // /> */
+  // }
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {isSignedIn ? (
-        <>
-          <Stack.Screen name="(tabs)" component={TabNavigator} />
-          <Stack.Screen
-            name="ExerciseDetail"
-            component={ExerciseDetail}
-            options={{
-              headerShown: false,
-              presentation: 'modal',
-              gestureEnabled: true,
-              animationTypeForReplace: 'push',
-            }}
-          />
-        </>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={isLoggedIn ? 'TABS' : 'AUTH'}
+    >
+      {isLoggedIn ? (
+        <Stack.Screen name="TABS" component={TabNavigator} />
       ) : (
-        <Stack.Screen name="(auth)" component={AuthLayout} />
+        <Stack.Screen name="AUTH" component={AuthLayout} />
       )}
     </Stack.Navigator>
   );

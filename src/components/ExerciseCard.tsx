@@ -82,7 +82,7 @@ export default function ExerciseCard({
                 {getDifficultyText(item.difficulty)}
               </Text>
             </View>
-            {shownChevron && (
+            {showChevron && (
               <TouchableOpacity className="P-2">
                 <ChevronRight size={20} color="#6B7280" />
               </TouchableOpacity>

@@ -11,11 +11,11 @@ import {
   CircleUserRound,
 } from 'lucide-react-native';
 import { View, Text } from 'react-native';
-import Home from '../screens/(tabs)/home';
-import Exercises from '../screens/(tabs)/exercises';
-import Workout from '../screens/(tabs)/workout';
-import History from '../screens/(tabs)/history';
-import Profile from '../screens/(tabs)/profile';
+import Home from '../screens/tabs/Home';
+import Exercises from '../screens/tabs/Exercises';
+import Workout from '../screens/tabs/Workout';
+import History from '../screens/tabs/History';
+import Profile from '../screens/tabs/Profile';
 
 const Tab = createBottomTabNavigator();
 
