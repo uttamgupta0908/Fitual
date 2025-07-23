@@ -28,10 +28,48 @@ Fitual is a modern fitness app built with **React Native CLI**, designed to help
 
 ```sh
 npm install
-```
-
 npm start
-
-```
 npm run android
+npm run ios
 ```
+
+## Backend Setup (Node + Prisma + MySQL)
+
+```sh
+cd backend
+npm install
+npx prisma migrate dev --name init
+npx prisma db seed
+npm run dev
+```
+
+### 🗄️ Database Configuration
+
+```env
+DATABASE_URL="mysql://user:password@localhost:3306/fitual"
+JWT_SECRET="your_jwt_secret"
+```
+
+### 📸 UI Preview
+
+Coming Soon... (You can add screenshots here)
+
+🙌 Credits
+Fitual is crafted with ❤️ by [Your Name]
+Icons powered by Lucide Icons
+Inspiration from modern fitness UIs.
+
+## 📄 License
+
+---
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+Let me know if you want sections like:
+
+- GitHub badges
+- API documentation
+- Contributor guide
+- Deployment instructions (Expo / EAS)
+
+I can include those too.
