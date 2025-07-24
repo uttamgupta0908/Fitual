@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { ChevronRight } from 'lucide-react-native';
-import { Image } from 'react-native-svg';
+import { Image } from 'react-native';
 
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
