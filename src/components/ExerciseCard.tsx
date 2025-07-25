@@ -1,8 +1,9 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { ChevronRight } from 'lucide-react-native';
 import { Image } from 'react-native';
-
+import { ExerciseType } from '../utils/exercise';
+import { Exercise } from '../utils/workout';
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case 'beginner':
@@ -51,8 +52,9 @@ export default function ExerciseCard({
     >
       <View className="flex-row p-6">
         <View className="w-20 h-20 bg-white rounded-xl mr-4 overflow-hidden">
-          {item.image ? (
+          {item.imageUrl ? (
             <Image
+              source={{ uri: item?.imageUrl }}
               //  source={{ uri: urlFor(item.image?.asset?._ref).url() }}
               className="w-full h-full"
               resizeMode="contain"

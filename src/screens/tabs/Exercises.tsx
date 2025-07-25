@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CircleX, HeartPulse, Search } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { fetchExercisesFromAPI, ExerciseType } from '../../utils/exercise';
+import ExerciseCard from '../../components/ExerciseCard';
 
 export default function Exercises() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,25 +50,25 @@ export default function Exercises() {
     setRefreshing(false);
   };
 
-  const renderExercise = ({ item }: { item: ExerciseType }) => (
-    <TouchableOpacity
-      className="bg-white p-4 mb-4 rounded-xl shadow"
-      onPress={() => navigation.navigate('ExerciseDetail', { id: item.id })}
-    >
-      <Image
-        source={{ uri: item.imageUrl }}
-        className="w-full h-48 rounded-xl mb-2"
-        resizeMode="cover"
-      />
-      <Text className="text-xl font-semibold text-gray-800">{item.name}</Text>
-      <Text className="text-sm text-gray-600">
-        {item.muscleGroup} • {item.equipment} • {item.difficulty}
-      </Text>
-      <Text className="text-sm text-gray-500 mt-1 number-of-lines={2}">
-        {item.description}
-      </Text>
-    </TouchableOpacity>
-  );
+  // const renderExercise = ({ item }: { item: ExerciseType }) => (
+  //   <TouchableOpacity
+  //     className="bg-gray-700  rounded-xl shadow"
+  //     onPress={() => navigation.navigate('ExerciseDetail', { id: item.id })}
+  //   >
+  //     <Image
+  //       source={{ uri: item.imageUrl }}
+  //       className="w-full h-48 rounded-xl mb-2"
+  //       resizeMode="cover"
+  //     />
+  //     <Text className="text-xl font-semibold text-gray-800">{item.name}</Text>
+  //     <Text className="text-sm text-gray-600">
+  //       {item.muscleGroup} • {item.equipment} • {item.difficulty}
+  //     </Text>
+  //     <Text className="text-sm text-gray-500 mt-1 number-of-lines={2}">
+  //       {item.description}
+  //     </Text>
+  //   </TouchableOpacity>
+  // );
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
@@ -100,11 +101,19 @@ export default function Exercises() {
 
       {/* FlatList */}
       <FlatList
+        // className="bg-black"
         data={filteredExercises}
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ padding: 24 }}
-        renderItem={renderExercise}
+        renderItem={({ item }) => (
+          <ExerciseCard
+            item={item}
+            onPress={() =>
+              navigation.navigate('ExerciseDetail', { id: item.id })
+            }
+          />
+        )}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
