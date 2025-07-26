@@ -10,6 +10,7 @@ import { storage } from '../storage/mmkv'; // Adjust path as needed
 import ExerciseDetail from '../components/ExerciseDetail';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { ActivityIndicator, View } from 'react-native';
+import WorkoutDetail from '../components/WorkoutDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,7 +42,20 @@ export default function RootNavigator() {
       initialRouteName={isLoggedIn ? 'TABS' : 'AUTH'}
     >
       {isLoggedIn ? (
-        <Stack.Screen name="TABS" component={TabNavigator} />
+        <>
+          <Stack.Screen name="TABS" component={TabNavigator} />
+          <Stack.Screen
+            name="ExerciseDetail"
+            component={ExerciseDetail}
+            options={{
+              headerShown: false,
+              presentation: 'modal',
+              gestureEnabled: true,
+              animationTypeForReplace: 'push',
+            }}
+          />
+          <Stack.Screen name="WorkoutDetail" component={WorkoutDetail} />
+        </>
       ) : (
         <Stack.Screen name="AUTH" component={AuthLayout} />
       )}

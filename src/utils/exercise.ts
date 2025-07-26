@@ -9,7 +9,7 @@ export type ExerciseType = {
   imageUrl: string;
 };
 
-const API_URL = 'http://192.168.1.6:5000'; // or your live server URL
+import { API_URL } from '@env';
 
 export const fetchExercisesFromAPI = async (): Promise<ExerciseType[]> => {
   const res = await fetch(`${API_URL}/exercises`);

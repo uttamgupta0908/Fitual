@@ -1,9 +1,10 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
-import { ChevronRight } from 'lucide-react-native';
+import { ChevronRight, HeartPulse } from 'lucide-react-native';
 import { Image } from 'react-native';
 import { ExerciseType } from '../utils/exercise';
 import { Exercise } from '../utils/workout';
+import ExerciseDetail from './ExerciseDetail';
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case 'beginner':
@@ -55,13 +56,12 @@ export default function ExerciseCard({
           {item.imageUrl ? (
             <Image
               source={{ uri: item?.imageUrl }}
-              //  source={{ uri: urlFor(item.image?.asset?._ref).url() }}
               className="w-full h-full"
               resizeMode="contain"
             />
           ) : (
             <View className=" w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 items-center justify-center">
-              {/* <Ionicons name="fitness" size={24} color="white" /> */}
+              <HeartPulse size={24} color="white" />
             </View>
           )}
         </View>
@@ -85,7 +85,7 @@ export default function ExerciseCard({
               </Text>
             </View>
             {showChevron && (
-              <TouchableOpacity className="P-2">
+              <TouchableOpacity className="p-2">
                 <ChevronRight size={20} color="#6B7280" />
               </TouchableOpacity>
             )}

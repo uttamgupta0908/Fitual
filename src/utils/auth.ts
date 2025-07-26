@@ -1,10 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// const API_URL = 'http://YOUR_BACKEND_IP:5000';
-// const API_URL = 'http://localhost:5000';
-const API_URL = 'http://192.168.1.6:5000';
-
-// console.log({ API_URL: process.env.API_URL });
+import { API_URL } from '@env';
 
 interface User {
   id: number;
@@ -70,6 +65,13 @@ export const getProfile = async (): Promise<User> => {
   return data.user;
 };
 
+// const fetchAIGuidance = async (exerciseName: string) => {
+//   const res = await fetch(`${API_URL}/api/ai`, {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify({ exerciseName }),
+//   });
+// };
 export const signout = async (): Promise<void> => {
   await AsyncStorage.removeItem('token');
 };

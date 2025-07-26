@@ -1,6 +1,7 @@
 import { MMKV } from 'react-native-mmkv';
+import { MMKV_ENCRYPTION_KEY } from '@env';
 
 export const storage = new MMKV({
-  id: 'auth-storage', // Optional: Custom ID
-  encryptionKey: 'your-32-character-encryption-key', // Optional: For encryption (recommended for tokens)
+  id: 'auth-storage',
+  encryptionKey: `${MMKV_ENCRYPTION_KEY}`,
 });
