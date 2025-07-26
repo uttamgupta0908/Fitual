@@ -14,7 +14,6 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { fetchExercisesFromAPI, ExerciseType } from '../../utils/exercise';
 import ExerciseCard from '../../components/ExerciseCard';
 
-
 ///////////////
 type RootStackParamList = {
   ExerciseDetail: { id: number };
@@ -87,6 +86,7 @@ export default function Exercises() {
 
       {/* FlatList */}
       <FlatList
+        // className="bg-black"
         // className="bg-black"
         data={filteredExercises}
         keyExtractor={item => item.id.toString()}
