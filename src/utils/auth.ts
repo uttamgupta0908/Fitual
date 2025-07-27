@@ -51,7 +51,6 @@ export const signin = async (
 
 export const getProfile = async (): Promise<User> => {
   const token = await AsyncStorage.getItem('token');
-
   const res = await fetch(`${API_URL}/profile`, {
     headers: { Authorization: `Bearer ${token}` },
   });

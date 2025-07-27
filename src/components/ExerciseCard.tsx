@@ -54,7 +54,6 @@ export default function ExerciseCard({
       <View className="flex-row p-6">
         <View className="w-20 h-20 bg-white rounded-xl mr-4 overflow-hidden">
           {item.imageUrl ? (
-          {item.imageUrl ? (
             <Image
               source={{ uri: item?.imageUrl }}
               className="w-full h-full"

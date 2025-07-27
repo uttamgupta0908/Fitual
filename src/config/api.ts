@@ -1,10 +1,12 @@
+import { API_URL } from '@env';
+
 // API Configuration
 export const API_CONFIG = {
   // Base URL for API requests
-  BASE_URL: 'http://192.168.1.9:5000',
+  BASE_URL: API_URL,
 
   // Network timeout settings
-  TIMEOUT: 10000, // 10 seconds
+  TIMEOUT: 10, // 10 seconds
 
   // Endpoints
   ENDPOINTS: {

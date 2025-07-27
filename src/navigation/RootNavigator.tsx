@@ -11,6 +11,7 @@ import ExerciseDetail from '../components/ExerciseDetail';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { ActivityIndicator, View } from 'react-native';
 import WorkoutDetail from '../components/WorkoutDetail';
+import { API_URL } from '@env';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,18 +25,7 @@ export default function RootNavigator() {
       </View>
     );
   }
-  // {
-  //   /* <Stack.Screen
-  //   name="ExerciseDetail"
-  //   component={ExerciseDetail}
-  //   options={{
-  //     headerShown: false,
-  //     presentation: 'modal',
-  //     gestureEnabled: true,
-  //     animationTypeForReplace: 'push',
-  //   }}
-  // /> */
-  // }
+
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
@@ -54,7 +44,7 @@ export default function RootNavigator() {
               animationTypeForReplace: 'push',
             }}
           />
-          <Stack.Screen name="WorkoutDetail" component={WorkoutDetail} />
+          {/* <Stack.Screen name="WorkoutDetail" component={WorkoutDetail} /> */}
         </>
       ) : (
         <Stack.Screen name="AUTH" component={AuthLayout} />
@@ -62,53 +52,3 @@ export default function RootNavigator() {
     </Stack.Navigator>
   );
 }
-
-// import AuthLayout from './(auth)';
-// import TabNavigator from './(tabs)/TabNavigator';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-// const Stack = createNativeStackNavigator();
-
-// export default function RootNavigator() {
-
-//   // Simulate an authentication check
-//   const isSignedIn = true; // Replace with actual authentication logic
-
-//   console.log('isSignedIn >>>', isSignedIn);
-//   return (
-//     <Stack.Navigator screenOptions={{ headerShown: false }}>
-//       {isSignedIn ? (
-//         <Stack.Screen name="(tabs)" component={TabNavigator} />
-//       ) : (
-//         <Stack.Screen name="(auth)" component={AuthLayout} />
-//       )}
-//     </Stack.Navigator>
-//   );
-// }
-
-// // import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// // import { useEffect } from 'react';
-// // import TabNavigator from './(tabs)/TabNavigator';
-
-// // const Stack = createNativeStackNavigator();
-// // export default function RootNavigator() {
-// //   let isSigned = true;
-// //   useEffect(() => {
-// //     // Simulate an authentication check
-// //     const checkAuth = async () => {
-// //       // Here you would typically check if the user is authenticated
-// //       // For example, checking a token in AsyncStorage or similar
-// //       isSigned = true; // Set this based on your auth logic
-// //     };
-// //     checkAuth();
-// //   }, []);
-// //   return (
-// //     <Stack.Navigator screenOptions={{ headerShown: false }}>
-// //       {isSigned ? (
-// //         <Stack.Screen name="(tabs)" component={TabNavigator} />
-// //       ) : (
-// //         <Stack.Screen name="(auth)" component={} />
-// //       )}
-// //     </Stack.Navigator>
-// //   );
-// // }

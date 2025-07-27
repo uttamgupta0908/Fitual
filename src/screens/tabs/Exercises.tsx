@@ -13,6 +13,7 @@ import { CircleX, HeartPulse, Search } from 'lucide-react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { fetchExercisesFromAPI, ExerciseType } from '../../utils/exercise';
 import ExerciseCard from '../../components/ExerciseCard';
+import { useAuth } from '../../context/AuthContext';
 
 ///////////////
 type RootStackParamList = {
@@ -25,22 +26,28 @@ export default function Exercises() {
   const [filteredExercises, setFilteredExercises] = useState<ExerciseType[]>(
     [],
   );
+  const [loading, setLoading] = useState(true);
+
+  const { user } = useAuth();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchExercises = async () => {
+    if (!user?.id) return;
     try {
       const data = await fetchExercisesFromAPI();
       setExercises(data);
       setFilteredExercises(data);
     } catch (error) {
       console.log('Error fetching exercise:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchExercises();
-  }, []);
+  }, [user?.id]);
 
   useEffect(() => {
     const filtered = exercises.filter(exercise =>
