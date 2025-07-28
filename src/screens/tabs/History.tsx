@@ -21,7 +21,7 @@ import {
 } from '@react-navigation/native';
 import { formatDuration } from '../../utils/formatworkout';
 
-import { Dumbbell } from 'lucide-react-native';
+import { Dumbbell, HeartPlus, Timer } from 'lucide-react-native';
 
 type RootStackParamList = {
   History: { refresh?: boolean };
@@ -58,8 +58,6 @@ export default function History() {
   useEffect(() => {
     if (route.params?.refresh) {
       fetchWorkouts();
-
-      // Optional: clear param after fetch
       navigation.setParams({ refresh: false });
     }
   }, [route.params?.refresh]);
@@ -70,28 +68,59 @@ export default function History() {
     setRefreshing(false);
   };
 
-  const formData = (dataString: string) => {
+  const formatDate = (dataString: string) => {
     const date = new Date(dataString);
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    if (date.toDateString() === today.toDateString()) {
-      return 'Today';
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return 'Yesterday';
-    } else {
-      return date.toLocaleDateString('en-Us', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-      });
-    }
+    // if (date.toDateString() === today.toDateString()) {
+    //   return 'Today';
+    // } else if (date.toDateString() === yesterday.toDateString()) {
+    //   return 'Yesterday';
+    // } else {
+    //   return date.toLocaleDateString('en-Us', {
+    //     weekday: 'short',
+    //     month: 'short',
+    //     day: 'numeric',
+    //   });
+    // }
+
+    //shorter way to implement the code
+    if (date.toDateString() === today.toDateString()) return 'Today';
+    if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    });
   };
 
   const formatWorkoutDuration = (seconds?: number) => {
     if (!seconds) return 'Duration not recorded';
     return formatDuration(seconds);
+  };
+
+  // const getTotalSets = (workout: GetWorkoutsQueryResult[number]) => {
+  //   return (
+  //     workout.exercises?.reduce((total, exercise) => {
+  //       return total + (exercise.sets?.length || 0);
+  //     }, 0) || 0
+  //   );
+  // };
+
+  // const geyExerciseNames = (workout: GetWorkoutQuery[number]) => {
+  //   return (
+  //     workout.exercises?.map(ex => ex.exercise?.name).filter(Boolean) || []
+  //   );
+  // };
+  const getTotalSets = (workout: Workout) => {
+    return workout.exercises?.length || 0;
+  };
+
+  const getExerciseNames = (workout: Workout): string[] => {
+    return workout.exercises?.map(e => e.exercise?.name).filter(Boolean) || [];
   };
 
   if (loading) {
@@ -145,7 +174,91 @@ export default function History() {
               <TouchableOpacity
                 key={workout.id}
                 className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
-              ></TouchableOpacity>
+                activeOpacity={0.7}
+                // onPress={() =>
+                //   // navigation.navigate(
+                //   //   'History' as never,
+                //   //   {
+                //   //     workoutId: workout.id,
+                //   //   } as never,
+
+                //   // )
+                // }
+              >
+                {/* // onPress={() => {
+                //   router.push({
+                //     pathname: '/history/workout-record',
+                //     params: {
+                //       workoutId: workout.id,
+                //     },
+                //   });
+                // }} */}
+
+                {/* workout heaeder */}
+                <View className="flex-row items-center justify-between mb-4">
+                  <View className="flex-1">
+                    <Text className="text-lg font-semibold text-gray-900">
+                      {formatDate(workout.date || '')}
+                    </Text>
+                    <View className="flex-row items-center mt-1">
+                      <Timer size={16} color="#687280" />
+                      <Text className="text-gray-600 ml-2">
+                        {formatWorkoutDuration(workout.duration)}
+                      </Text>
+                    </View>
+                  </View>
+                  <View className="bg-blue-100 rounded-full w-12 h-12 items-center justify-center">
+                    <HeartPlus size={24} color="#3B82F6" />
+                  </View>
+                </View>
+
+                {/* workout stats */}
+
+                <View className="flex-row items-center justify-between mb-4">
+                  <View className="flex-row items-center">
+                    <View className="bg-gray-100 rounded-lg px-3 py-2 mr-3">
+                      <Text className="text-sm font-medium text-gray-700">
+                        {workout.exercises?.length || 0} exercises
+                      </Text>
+                    </View>
+                    <View className="bg-gray-100 rounded-lg px-3 py-2">
+                      <Text className="text-sm font-medium text-gray-700">
+                        {getTotalSets(workout)} sets
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+
+                {/* exercise list  */}
+                {workout.exercises && workout.exercises.length > 0 && (
+                  <View className="mb-4">
+                    <Text className="text-sm font-medius text-gray-700 mb-2">
+                      Exercises:
+                    </Text>
+                    <View className="flex-row flex-wrap">
+                      {getExerciseNames(workout)
+                        .slice(0, 3)
+                        .map((name, index) => (
+                          <View
+                            key={index}
+                            className="bg-blue-50 rounded-lg px-3 py-1 mr-2 mb-2"
+                          >
+                            <Text className="text-blue-700 text-sm font-medium">
+                              {name}
+                            </Text>
+                          </View>
+                        ))}
+                      {getExerciseNames(workout).length > 3 && (
+                        <View className="bg-gray-108 rounded-lg px-3 py-1 mг-2 mb-2">
+                          <Text className="text-gray-600 text-sm font-medium">
+                            +{getExerciseNames(workout).length - 3} more
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                )}
+              </TouchableOpacity>
             ))}
           </View>
         )}
