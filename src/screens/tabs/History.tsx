@@ -22,6 +22,7 @@ import {
 import { formatDuration } from '../../utils/formatworkout';
 
 import { Dumbbell, HeartPlus, Timer } from 'lucide-react-native';
+import WorkoutDetail from '../../components/WorkoutDetail';
 
 type RootStackParamList = {
   History: { refresh?: boolean };
@@ -40,9 +41,9 @@ export default function History() {
     if (!user?.id) return;
     try {
       const data = await fetchWorkoutsFromAPI();
+
       setWorkouts(data);
       setFilteredWorkouts(data);
-      // (data);
     } catch (error) {
       console.log('Error fetching workouts:', error);
     } finally {
@@ -74,27 +75,27 @@ export default function History() {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    // if (date.toDateString() === today.toDateString()) {
-    //   return 'Today';
-    // } else if (date.toDateString() === yesterday.toDateString()) {
-    //   return 'Yesterday';
-    // } else {
-    //   return date.toLocaleDateString('en-Us', {
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    } else {
+      return date.toLocaleDateString('en-Us', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+      });
+    }
+
+    //shorter way to implement the code
+    //   if (date.toDateString() === today.toDateString()) return 'Today';
+    //   if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+
+    //   return date.toLocaleDateString('en-US', {
     //     weekday: 'short',
     //     month: 'short',
     //     day: 'numeric',
     //   });
-    // }
-
-    //shorter way to implement the code
-    if (date.toDateString() === today.toDateString()) return 'Today';
-    if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
-
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-    });
   };
 
   const formatWorkoutDuration = (seconds?: number) => {
@@ -138,7 +139,6 @@ export default function History() {
       </SafeAreaView>
     );
   }
-
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       {/* header*/}
@@ -175,15 +175,17 @@ export default function History() {
                 key={workout.id}
                 className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
                 activeOpacity={0.7}
-                // onPress={() =>
-                //   // navigation.navigate(
-                //   //   'History' as never,
-                //   //   {
-                //   //     workoutId: workout.id,
-                //   //   } as never,
-
-                //   // )
-                // }
+                onPress={() =>
+                  navigation.navigate('WorkoutRecord', { workout: workout.id })
+                }
+                //   onPress={() =>
+                //     navigation.navigate(
+                //       'History' as never,
+                //       {
+                //         workout: workout.id,
+                //       } as never,
+                //     )
+                //   }
               >
                 {/* // onPress={() => {
                 //   router.push({
@@ -200,6 +202,7 @@ export default function History() {
                     <Text className="text-lg font-semibold text-gray-900">
                       {formatDate(workout.date || '')}
                     </Text>
+                    4
                     <View className="flex-row items-center mt-1">
                       <Timer size={16} color="#687280" />
                       <Text className="text-gray-600 ml-2">
