@@ -11,7 +11,10 @@ import ExerciseDetail from '../components/ExerciseDetail';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { ActivityIndicator, View } from 'react-native';
 import WorkoutDetail from '../components/WorkoutDetail';
-import { API_URL } from '@env';
+import WorkoutRecord from '../components/WorkoutRecord';
+
+// import { API_URL } from '@env';
+const API_URL = 'http://192.168.1.12:5000';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,7 +47,18 @@ export default function RootNavigator() {
               animationTypeForReplace: 'push',
             }}
           />
-          {/* <Stack.Screen name="WorkoutDetail" component={WorkoutDetail} /> */}
+          <Stack.Screen name="WorkoutDetail" component={WorkoutDetail} />
+          <Stack.Screen
+            name="WorkoutRecord"
+            component={WorkoutRecord}
+            options={{
+              headerShown: true,
+              headerTitle: 'Workout Record',
+              headerBackTitle: 'History',
+              // gestureEnabled: true,
+              // animationTypeForReplace: 'push',
+            }}
+          />
         </>
       ) : (
         <Stack.Screen name="AUTH" component={AuthLayout} />

@@ -1,4 +1,5 @@
-import { API_URL } from '@env';
+// import { API_URL } from '@env';
+const API_URL = 'http://192.168.1.12:5000';
 
 // API Configuration
 export const API_CONFIG = {
@@ -6,7 +7,7 @@ export const API_CONFIG = {
   BASE_URL: API_URL,
 
   // Network timeout settings
-  TIMEOUT: 10, // 10 seconds
+  TIMEOUT: 1000, // 10 seconds
 
   // Endpoints
   ENDPOINTS: {
@@ -32,7 +33,7 @@ export const checkNetworkStatus = async (): Promise<boolean> => {
   try {
     const response = await fetch(API_CONFIG.BASE_URL, {
       method: 'HEAD',
-      timeout: 5000,
+      timeout: 1000,
     });
     return response.ok;
   } catch (error) {

@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '@env';
+// import { API_URL } from '@env';
+const API_URL = 'http://192.168.1.12:5000';
 
 interface User {
   id: number;

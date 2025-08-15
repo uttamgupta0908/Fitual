@@ -2,6 +2,7 @@ export function formatDuration(seconds?: number): string {
   if (typeof seconds !== 'number' || isNaN(seconds)) {
     return '0s';
   }
+
   if (seconds < 60) {
     return `${seconds}s`;
   }

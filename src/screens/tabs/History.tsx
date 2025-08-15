@@ -80,7 +80,7 @@ export default function History() {
     } else if (date.toDateString() === yesterday.toDateString()) {
       return 'Yesterday';
     } else {
-      return date.toLocaleDateString('en-Us', {
+      return date.toLocaleDateString('en-US ', {
         weekday: 'short',
         month: 'short',
         day: 'numeric',
@@ -176,7 +176,7 @@ export default function History() {
                 className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
                 activeOpacity={0.7}
                 onPress={() =>
-                  navigation.navigate('WorkoutRecord', { workout: workout.id })
+                  navigation.navigate('WorkoutRecord', { id: workout.id })
                 }
                 //   onPress={() =>
                 //     navigation.navigate(
@@ -202,7 +202,7 @@ export default function History() {
                     <Text className="text-lg font-semibold text-gray-900">
                       {formatDate(workout.date || '')}
                     </Text>
-                    4
+
                     <View className="flex-row items-center mt-1">
                       <Timer size={16} color="#687280" />
                       <Text className="text-gray-600 ml-2">
@@ -252,7 +252,7 @@ export default function History() {
                           </View>
                         ))}
                       {getExerciseNames(workout).length > 3 && (
-                        <View className="bg-gray-108 rounded-lg px-3 py-1 mг-2 mb-2">
+                        <View className="bg-gray-100 rounded-lg px-3 py-1 mr-2 mb-2">
                           <Text className="text-gray-600 text-sm font-medium">
                             +{getExerciseNames(workout).length - 3} more
                           </Text>
