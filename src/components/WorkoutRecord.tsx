@@ -29,7 +29,7 @@ export default function WorkoutRecord() {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
-  const [workout, setWorkout] = useState<Workout | []>([]);
+  const [workout, setWorkout] = useState<Workout | []>([]); //listof the workout []
 
   const API_URL = 'http://192.168.1.8:5000';
 
@@ -211,7 +211,7 @@ export default function WorkoutRecord() {
         {/* workout summary */}
         <View className="bg-white p-6 border-b border-gray-300">
           <View className="flex-row justify-between mb-4">
-            <Text className="text-lg font-semiboid text-gray-900">
+            <Text className="text-lg font-semibold text-gray-900">
               Workout Summary
             </Text>
             <TouchableOpacity
@@ -299,10 +299,10 @@ items-center justify-center"
                 {exerciseData.sets?.map((set, setIndex) => (
                   <View
                     key={set.key}
-                    className="bg-gray-50 rounded-1g p-3 flex-row items-center justify-between"
+                    className="bg-gray-50 rounded-lg p-3 flex-row items-center justify-between"
                   >
                     <View className="flex-row items-center">
-                      <View className="bg-gray-200 rounded-full w-6 h-6 items-center justify-center mг-3">
+                      <View className="bg-gray-200 rounded-full w-6 h-6 items-center justify-center mr-3">
                         <Text className="text-gray-700 text-xs font-medium">
                           {setIndex + 1}
                         </Text>
@@ -312,7 +312,7 @@ items-center justify-center"
                       </Text>
                     </View>
                     {set.weight && (
-                      <View className="flex-row itens-center">
+                      <View className="flex-row items-center">
                         <Dumbbell size={16} color="#6B7280" />
                         <Text className="text-gray-700 ml-2 font-medium">
                           {set.weight}
