@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // import { API_URL } from '@env';
-const API_URL = 'http://192.168.1.12:5000';
+const API_URL = 'http://192.168.1.8:5000';
 
 import {
   View,
@@ -112,7 +112,7 @@ export default function ExerciseDetail() {
     `;
 
     try {
-      const res = await fetch(`http://192.168.1.12:5000/gemini`, {
+      const res = await fetch(`${API_URL}/gemini`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt }),
