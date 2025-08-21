@@ -29,7 +29,7 @@ export default function WorkoutRecord() {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
-  const [workout, setWorkout] = useState<Workout | []>([]); //listof the workout []
+  const [workout, setWorkout] = useState<Workout[]>([]);
 
   const API_URL = 'http://192.168.1.8:5000';
 
@@ -86,12 +86,12 @@ export default function WorkoutRecord() {
 
   const getTotalVolume = () => {
     let totalVolume = 0;
-    let unit = ' kg';
+    let unit = 'lbs';
     workout?.exercises?.forEach(exercise => {
-      exercise.reps?.forEach(rep => {
-        if (rep.weight && rep.reps) {
-          totalVolume += rep.weight * rep.reps;
-          unit = rep.weightUnit || ' kg';
+      exercise.sets?.forEach(set => {
+        if (set.weight && set.reps) {
+          totalVolume += set.weight * set.reps;
+          unit = set.weightUnit || ' lbs';
         }
       });
     });
