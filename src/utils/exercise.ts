@@ -10,7 +10,7 @@ export type ExerciseType = {
 };
 
 // import { API_URL } from '@env';
-const API_URL = 'http://192.168.1.12:5000';
+const API_URL = 'http://192.168.1.8:5000';
 
 export const fetchExercisesFromAPI = async (): Promise<ExerciseType[]> => {
   const res = await fetch(`${API_URL}/exercises`);

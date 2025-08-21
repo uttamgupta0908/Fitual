@@ -10,7 +10,7 @@ export default function AuthLayout() {
       <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="SignIn" component={SignInScreen} />
 
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
     </Stack.Navigator>
   );
 }

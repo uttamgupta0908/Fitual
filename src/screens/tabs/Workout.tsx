@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { HeartCrackIcon, HeartPlus, Play } from 'lucide-react-native';
+import { HeartPlus, Play } from 'lucide-react-native';
 
 export default function Workout() {
   const navigation = useNavigation();
@@ -31,14 +31,14 @@ export default function Workout() {
       </View>
       {/* generic start workout card */}
       <View
-        className="bg-white rounded-3x1 p-6 shadow-sm border
+        className="bg-white rounded-3xl p-6 shadow-sm border
 border-gray-100 mx-6 mb-8"
       >
         <View className="flex-row items-center justify-between mb-6">
           <View className="flex-row items-center">
             <View
               className="w-12 h-12 bg-blue-100 rounded-full items-center
-Justify-center mr-3"
+justify-center mr-3"
             >
               <HeartPlus size={24} color="#3882F6" />
             </View>
@@ -57,7 +57,7 @@ Justify-center mr-3"
         {/* start button */}
         <TouchableOpacity
           onPress={startWorkout}
-          className="bg-blue-600 rounded-2xl ppy-4 items-center active:bg-blue-700"
+          className="bg-blue-600 rounded-2xl py-4 items-center active:bg-blue-700"
           activeOpacity={0.8}
         >
           <View className="flex-row items-center">

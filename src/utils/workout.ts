@@ -18,6 +18,7 @@ export type Exercise = {
 
 export type WorkoutExercise = {
   id: number;
+  sets: number;
   reps: number;
   weight: number;
   weightUnit: WeightUnit;
@@ -32,9 +33,11 @@ export type Workout = {
   exercises: WorkoutExercise[];
 };
 
-export const fetchWorkoutsFromAPI = async (): Promise<Workout[]> => {
+export const fetchWorkoutsFromAPI = async (
+  userId: number,
+): Promise<Workout[]> => {
   const token = await AsyncStorage.getItem('token');
-  const response = await fetch(`${API_URL}/workouts`, {
+  const response = await fetch(`${API_URL}/workouts/${userId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
