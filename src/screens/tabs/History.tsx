@@ -117,7 +117,11 @@ export default function History() {
   //   );
   // };
   const getTotalSets = (workout: Workout) => {
-    return workout.exercises?.length || 0;
+    return (
+      workout.exercises?.reduce((total, exercise) => {
+        return total + (exercise.sets?.length || 0);
+      }, 0) || 0
+    );
   };
 
   const getExerciseNames = (workout: Workout): string[] => {
