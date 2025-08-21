@@ -16,11 +16,14 @@ import { useWorkoutStore, WorkoutSet } from '../../store/workoutstore';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Check, CheckCircle, Dumbbell, Plus, Trash } from 'lucide-react-native';
 import ExerciseSelectionModel from './ExerciseSelectionModel';
+import { useAuth } from '../context/AuthContext';
+import { WorkoutExercise } from '../utils/workout';
 
 export default function ActiveWorkout() {
+  const API_URL = 'http://192.168.1.8:5000';
   const [shownExerciseSelection, setShowExerciseSelection] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-
+  const { user } = useAuth();
   const navigation = useNavigation();
   const {
     workoutExercises,
@@ -50,6 +53,131 @@ export default function ActiveWorkout() {
       .toString()
       .padStart(2, '0')}`;
   };
+
+  const endWorkout = async () => {
+    const saved = await saveWorkoutToDatabase();
+    if (saved) {
+      Alert.alert('Workout Saved', 'Your workout has been saved successfully!');
+      //   reset the workout
+      navigation.replace('History', { refresh: true });
+    }
+  };
+
+  const saveWorkoutToDatabase = async (
+    workoutExercises: WorkoutExercise[],
+    totalSeconds: number,
+    setIsSaving: (saving: boolean) => void,
+    isSaving: boolean,
+  ) => {
+    const { user, token } = useAuth(); // ✅ get user + token from context
+
+    if (isSaving) return false;
+    setIsSaving(true);
+
+    try {
+      if (!user || !token) {
+        throw new Error('User not logged in');
+      }
+
+      const exercisesPayload = workoutExercises.map(exercise => ({
+        exerciseId: exercise.id, // assume exercise already has id
+        sets: exercise.sets.map(set => ({
+          reps: set.reps,
+          weight: set.weight,
+          weightUnit: set.weightUnit,
+        })),
+      }));
+
+      const workoutPayload = {
+        userId: user.id, // ✅ logged-in user's id
+        duration: totalSeconds, // stopwatch duration
+        exercises: exercisesPayload,
+      };
+
+      const res = await fetch(`${API_URL}/workouts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // ✅ auth token
+        },
+        body: JSON.stringify(workoutPayload),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to save workout');
+      }
+
+      const data = await res.json();
+      console.log('Workout saved ✅:', data);
+      return data;
+
+      const vaildExercises = exercisesPayload.filter(
+        exercise => exercise.sets.length > 0,
+      );
+      if (vaildExercises.length == 0) {
+        Alert.alert(
+          'No Completed Sets',
+          'Please completed at least one set before saving the workout.',
+        );
+        return false;
+      }
+      // crreate the woorkout doocumentation
+      ////////////
+    } catch (error) {
+      console.error('Error saving workout:', error);
+      Alert.alert('Save Failed', 'Failed to save workout. Please try again.');
+      return false;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // }
+  //   const saveWorkoutToDatabase = async () => {
+  //     if (isSaving) return false;
+  //     setIsSaving(true);
+
+  //     try {
+  //       // implement saving...
+  //       //ussse stopwatch total seconds for duration
+  //       const durationInSeconds = totalSeconds;
+  //     //   finding exercise documantion
+  //        const exercises=await Promise.all(
+  //         workoutExercises.map(async(exercise)=>{
+  //         const exerciseDoc = await client.fetch(findExerciseQuerey,{
+  //             name:exercise.name
+  //         });
+  //     if(!exerciseDoc){
+  //         throw new Error(
+  //             `Exercise"${exercise.name}" not found in database`
+  //         );
+  //     }
+  //   const setsForUserId = exercise.sets .filter((sets)=.({_type:"set",
+  //     _key:Math.random().toString(36).substr(2,9),
+  //     reps: parseInt(set.reps,10)||0,
+  //     weightUnit:set.weightUnit,
+  //   }));
+  //   return{
+  //     _type:"workoutExercise",
+  //     _key:Math.random().toString(36).substring(2,9),
+  //     exercise:(
+  //         _type:"reference",
+  //         _ref:exerciseDoc._id,
+  //     ),
+  //     sets:setsForUserId,
+
+  //   };
+  // })
+  //        )
+
+  //     } catch (error) {
+  //       console.error('Error saving workout:', error);
+  //       Alert.alert('Save Failed', 'Failed to save workout.Please try again');
+  //       return false;
+  //     } finally {
+  //       setIsSaving(false);
+  //     }
+  //   };
 
   const saveWorkout = () => {
     Alert.alert(
