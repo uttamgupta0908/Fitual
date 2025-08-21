@@ -10,14 +10,16 @@ import {
   CirclePlus,
   CircleUserRound,
 } from 'lucide-react-native';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import Home from '../screens/tabs/Home';
 import Exercises from '../screens/tabs/Exercises';
 import Workout from '../screens/tabs/Workout';
 import History from '../screens/tabs/History';
 import Profile from '../screens/tabs/Profile';
+// import { useAuth } from '../context/AuthContext';
 
 const Tab = createBottomTabNavigator();
+// const { user } = useAuth();
 
 const TabNavigator = () => {
   return (
@@ -80,6 +82,18 @@ const TabNavigator = () => {
           title: 'Profile',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
+            //   user?.imageUrl || user?.externalAccounts?.[0]?.imageUrl ?
+            //     <Image
+            //       source={{
+            //         uri: user?.imageUrl ?? user?.externalAccounts?.[0]?.imageUrl,
+            //       }}
+            //       style={{ width: 28, height: 28, borderRadius: 100 }}
+            //     />
+            // <Image
+            //   source={user?.imageUrl ?? user?.externalAccounts[0]?.imageUrl}
+            //   className="rounded-full"
+            //   style={{ width: 28, height: 28, borderRadius: 100 }}
+            // />
             <CircleUserRound color={color} size={size} />
           ),
         }}
