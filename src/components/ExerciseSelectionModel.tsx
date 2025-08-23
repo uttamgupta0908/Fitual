@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react';
 import { useWorkoutStore } from '../../store/workoutstore';
 import { CircleX, HeartPlus, Search } from 'lucide-react-native';
 import ExerciseCard from './ExerciseCard';
-import { Exercise } from '../utils/workout';
+import { Exercise, WorkoutExercisePayload } from '../utils/workout';
 import { fetchExercisesFromAPI } from '../utils/exercise';
 import { useAuth } from '../context/AuthContext';
 
@@ -49,15 +49,18 @@ export default function ExerciseSelectionModel({
   const fetchExercises = async () => {
     if (!user?.id) return;
     try {
-      const exerccise = await fetchExercisesFromAPI();
+      const exercises = await fetchExercisesFromAPI();
       setExercises(exercises);
       setFilteredExercises(exercises);
     } catch (error) {
       console.log('Error fetching exercises:', error);
     }
   };
-  const handleExercisePress = (exercise: Exercise) => {
-    addExerciseToWorkout({ name: exercise.name, userId: exercise.id });
+  const handleExercisePress = (exercise: any) => {
+    addExerciseToWorkout({
+      id: exercise.id,
+      name: exercise.name,
+    });
     onClose();
   };
 
@@ -80,7 +83,7 @@ export default function ExerciseSelectionModel({
 border-gray-100"
         >
           <View className="flex-row items-center justify-between mb-4">
-            <Text className="text-2xl font-bold ☐ text-gray-800">
+            <Text className="text-2xl font-bold text-gray-800">
               Add Exercise
             </Text>
             <TouchableOpacity
@@ -95,7 +98,7 @@ border-gray-100"
           </Text>
           {/* Search Bar */}
           <View
-            className="flex-row items-center bg-gray-100 rounded-x1 px-4
+            className="flex-row items-center bg-gray-100 rounded-xl px-4
 py-3"
           >
             <Search size={20} color="#6B7280" />
@@ -116,13 +119,13 @@ py-3"
         {/* exercise list */}
         <FlatList
           data={filteredExercises}
-          renderItem={({ item }) => {
+          renderItem={({ item }) => (
             <ExerciseCard
               item={item}
               onPress={() => handleExercisePress(item)}
               showChevron={false}
-            />;
-          }}
+            />
+          )}
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{

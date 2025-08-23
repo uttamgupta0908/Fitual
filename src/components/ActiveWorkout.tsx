@@ -17,13 +17,18 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Check, CheckCircle, Dumbbell, Plus, Trash } from 'lucide-react-native';
 import ExerciseSelectionModel from './ExerciseSelectionModel';
 import { useAuth } from '../context/AuthContext';
-import { WorkoutExercise } from '../utils/workout';
+import {
+  saveWorkoutToAPI,
+  Workout,
+  WorkoutExercise,
+  WorkoutPayload,
+} from '../utils/workout';
 
 export default function ActiveWorkout() {
-  const API_URL = 'http://192.168.1.8:5000';
+  const API_URL = 'http://192.168.1.11:5000';
   const [shownExerciseSelection, setShowExerciseSelection] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const navigation = useNavigation();
   const {
     workoutExercises,
@@ -54,12 +59,84 @@ export default function ActiveWorkout() {
       .padStart(2, '0')}`;
   };
 
+  // const endWorkout = async () => {
+  //   const saved = await saveWorkoutToDatabase();
+  //   if (saved) {
+  //     Alert.alert('Workout Saved', 'Your workout has been saved successfully!');
+  //     //   reset the workout
+  //     navigation.replace('History', { refresh: true });
+  //   }
+  // };
+
+  // const endWorkout = async () => {
+  //   if (!user) return;
+
+  //   const payload: WorkoutPayload = {
+  //     userId: user.id,
+  //     date: new Date().toISOString(),
+  //     duration: totalSeconds,
+  //     exercises: workoutExercises.map(ex => ({
+  //       exerciseId: ex.id,
+  //       sets: ex.sets.length,
+  //       reps: ex.sets.reduce((sum, s) => sum + Number(s.reps || 0), 0),
+  //       weight: ex.sets.reduce((sum, s) => sum + Number(s.weight || 0), 0),
+  //       weightUnit: weightUnit,
+  //     })),
+  //   };
+
+  //   try {
+  //     setIsSaving(true);
+  //     const result = await saveWorkoutToAPI(payload);
+  //     console.log('Workout saved ✅', result);
+  //     Alert.alert('Workout Saved', 'Your workout has been saved successfully!');
+  //     navigation.replace('History', { refresh: true });
+  //   } catch (error) {
+  //     console.error(error);
+  //     Alert.alert('Save Failed', 'Failed to save workout. Please try again.');
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
+
   const endWorkout = async () => {
-    const saved = await saveWorkoutToDatabase();
-    if (saved) {
+    if (!user) return;
+    // Flatten each set per exercise
+    const exercisesPayload = workoutExercises.flatMap(exercise =>
+      exercise.sets
+        .filter(set => set.isCompleted) // only include completed sets
+        .map(set => ({
+          exerciseId: Number(exercise.exerciseId),
+          reps: Number(set.reps) || 0,
+          weight: Number(set.weight) || 0,
+          weightUnit: set.weightUnit || weightUnit,
+        })),
+    );
+    if (exercisesPayload.length === 0) {
+      Alert.alert(
+        'No Completed Sets',
+        'Please complete at least one set before saving the workout.',
+      );
+      return;
+    }
+
+    const payload: WorkoutPayload = {
+      userId: user.id,
+      date: new Date().toISOString(),
+      duration: totalSeconds,
+      exercises: exercisesPayload,
+    };
+
+    try {
+      setIsSaving(true);
+      const result = await saveWorkoutToAPI(payload);
+      console.log('Workout saved ✅', result);
       Alert.alert('Workout Saved', 'Your workout has been saved successfully!');
-      //   reset the workout
       navigation.replace('History', { refresh: true });
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Save Failed', 'Failed to save workout. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -69,8 +146,6 @@ export default function ActiveWorkout() {
     setIsSaving: (saving: boolean) => void,
     isSaving: boolean,
   ) => {
-    const { user, token } = useAuth(); // ✅ get user + token from context
-
     if (isSaving) return false;
     setIsSaving(true);
 
@@ -80,7 +155,7 @@ export default function ActiveWorkout() {
       }
 
       const exercisesPayload = workoutExercises.map(exercise => ({
-        exerciseId: exercise.id, // assume exercise already has id
+        exerciseId: exercise.id,
         sets: exercise.sets.map(set => ({
           reps: set.reps,
           weight: set.weight,
@@ -109,12 +184,12 @@ export default function ActiveWorkout() {
 
       const data = await res.json();
       console.log('Workout saved ✅:', data);
-      return data;
+      // return data;
 
-      const vaildExercises = exercisesPayload.filter(
+      const validExercises = exercisesPayload.filter(
         exercise => exercise.sets.length > 0,
       );
-      if (vaildExercises.length == 0) {
+      if (validExercises.length == 0) {
         Alert.alert(
           'No Completed Sets',
           'Please completed at least one set before saving the workout.',
@@ -122,7 +197,18 @@ export default function ActiveWorkout() {
         return false;
       }
       // crreate the woorkout doocumentation
-      ////////////
+      const workoutData: WorkoutData = {
+        userId: user.id,
+        date: new Date().toISOString(),
+        duration: totalSeconds,
+        exercises: validExercises,
+      };
+      const result = await fetch('SaveWorkout', {
+        method: 'POST',
+        body: JSON.stringify({ workoutData }),
+      });
+      console.log('workout saved successfully:', result);
+      return true;
     } catch (error) {
       console.error('Error saving workout:', error);
       Alert.alert('Save Failed', 'Failed to save workout. Please try again.');
@@ -131,53 +217,6 @@ export default function ActiveWorkout() {
       setIsSaving(false);
     }
   };
-
-  // }
-  //   const saveWorkoutToDatabase = async () => {
-  //     if (isSaving) return false;
-  //     setIsSaving(true);
-
-  //     try {
-  //       // implement saving...
-  //       //ussse stopwatch total seconds for duration
-  //       const durationInSeconds = totalSeconds;
-  //     //   finding exercise documantion
-  //        const exercises=await Promise.all(
-  //         workoutExercises.map(async(exercise)=>{
-  //         const exerciseDoc = await client.fetch(findExerciseQuerey,{
-  //             name:exercise.name
-  //         });
-  //     if(!exerciseDoc){
-  //         throw new Error(
-  //             `Exercise"${exercise.name}" not found in database`
-  //         );
-  //     }
-  //   const setsForUserId = exercise.sets .filter((sets)=.({_type:"set",
-  //     _key:Math.random().toString(36).substr(2,9),
-  //     reps: parseInt(set.reps,10)||0,
-  //     weightUnit:set.weightUnit,
-  //   }));
-  //   return{
-  //     _type:"workoutExercise",
-  //     _key:Math.random().toString(36).substring(2,9),
-  //     exercise:(
-  //         _type:"reference",
-  //         _ref:exerciseDoc._id,
-  //     ),
-  //     sets:setsForUserId,
-
-  //   };
-  // })
-  //        )
-
-  //     } catch (error) {
-  //       console.error('Error saving workout:', error);
-  //       Alert.alert('Save Failed', 'Failed to save workout.Please try again');
-  //       return false;
-  //     } finally {
-  //       setIsSaving(false);
-  //     }
-  //   };
 
   const saveWorkout = () => {
     Alert.alert(
@@ -212,7 +251,7 @@ export default function ActiveWorkout() {
 
   const deleteExercise = (exerciseId: string) => {
     setWorkoutExercises(exercises =>
-      exercises.filter(exercise => exercise.id !== exerciseId),
+      exercises.filter(exercise => exercise.exerciseId !== exerciseId),
     );
   };
 
@@ -226,7 +265,7 @@ export default function ActiveWorkout() {
     };
     setWorkoutExercises(exercises =>
       exercises.map(exercise =>
-        exercise.id === exerciseId
+        exercise.exerciseId === exerciseId
           ? { ...exercise, sets: [...exercise.sets, newSet] }
           : exercise,
       ),
@@ -241,7 +280,7 @@ export default function ActiveWorkout() {
   ) => {
     setWorkoutExercises(exercises =>
       exercises.map(exercise =>
-        exercise.id === exerciseId
+        exercise.exerciseId === exerciseId
           ? {
               ...exercise,
               sets: exercise.sets.map(set =>
@@ -253,10 +292,10 @@ export default function ActiveWorkout() {
     );
   };
 
-  const deleteSet = (exerciseId: string, setId: String) => {
+  const deleteSet = (exerciseId: string, setId: string) => {
     setWorkoutExercises(exercises =>
       exercises.map(exercise =>
-        exercise.id === exerciseId
+        exercise.exerciseId === exerciseId
           ? { ...exercise, sets: exercise.sets.filter(set => set.id !== setId) }
           : exercise,
       ),
@@ -266,7 +305,7 @@ export default function ActiveWorkout() {
   const toggleSetCompletion = (exerciseId: string, setId: string) => {
     setWorkoutExercises(exercises =>
       exercises.map(exercise =>
-        exercise.id === exerciseId
+        exercise.exerciseId === exerciseId
           ? {
               ...exercise,
               sets: exercise.sets.map(set =>
@@ -363,21 +402,22 @@ export default function ActiveWorkout() {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-          <ScrollView className="flex-1 px-6 mt-4">
+          <ScrollView className="flex px-6 mt-4">
             {workoutExercises.map(exercise => (
-              <View key={exercise.id} className="mb-8">
+              <View key={exercise.exerciseId} className="mb-8">
                 {/* exerccise header */}
+
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('ExerciseDetail', {
-                      id: exercise.userId,
+                      id: exercise.exerciseId,
                     })
                   }
                   className="bg-blue-50 rounded-2xl p-4 mb-3"
                 >
                   <View className="flex-row items-center justify-between">
                     <View className="flex-1">
-                      <Text className="text-1 font-bold text-gray-900 mb-2">
+                      <Text className="text-lg font-bold text-gray-900 mb-2">
                         {exercise.name}
                       </Text>
                       <Text className="text-gray-600">
@@ -390,7 +430,7 @@ export default function ActiveWorkout() {
                     </View>
                     {/* delete exercis button */}
                     <TouchableOpacity
-                      onPress={() => deleteExercise(exercise.id)}
+                      onPress={() => deleteExercise(exercise.exerciseId)}
                       className="w-10 h-10 rounded-xl items-center justify-center bg-red-500 ml-3"
                     >
                       <Trash size={16} color="white" />
@@ -430,7 +470,12 @@ export default function ActiveWorkout() {
                             <TextInput
                               value={set.reps}
                               onChangeText={value =>
-                                updateSet(exercise.id, set.id, 'reps', value)
+                                updateSet(
+                                  exercise.exerciseId,
+                                  set.id,
+                                  'reps',
+                                  value,
+                                )
                               }
                               placeholder="0"
                               keyboardType="numeric"
@@ -450,7 +495,12 @@ export default function ActiveWorkout() {
                             <TextInput
                               value={set.weight}
                               onChangeText={value =>
-                                updateSet(exercise.id, set.id, 'weight', value)
+                                updateSet(
+                                  exercise.exerciseId,
+                                  set.id,
+                                  'weight',
+                                  value,
+                                )
                               }
                               placeholder="0"
                               keyboardType="numeric"
@@ -465,7 +515,7 @@ export default function ActiveWorkout() {
                           {/* complete button */}
                           <TouchableOpacity
                             onPress={() =>
-                              toggleSetCompletion(exercise.id, set.id)
+                              toggleSetCompletion(exercise.exerciseId, set.id)
                             }
                             className={`w-12 h-12 rounded-xl items-center justify-center mx-1 ${
                               set.isCompleted ? 'bg-green-500' : 'bg-gray-200'
@@ -481,7 +531,9 @@ export default function ActiveWorkout() {
 
                           {/* DELEte button */}
                           <TouchableOpacity
-                            onPress={() => deleteSet(exercise.id, set.id)}
+                            onPress={() =>
+                              deleteSet(exercise.exerciseId, set.id)
+                            }
                             className="w-12 h-12 rounded-xl items-center justify-center bg-red-500 ml-1"
                           >
                             <Trash size={16} color="white" />
@@ -493,7 +545,7 @@ export default function ActiveWorkout() {
 
                   {/* add new set button */}
                   <TouchableOpacity
-                    onPress={() => addNewSet(exercise.id)}
+                    onPress={() => addNewSet(exercise.exerciseId)}
                     className="bg-blue-100 border-2 border-dashed border-blue-300 rounded-lg py-3 items-center mt-2"
                   >
                     <View className="flex-row items-center">
@@ -528,8 +580,8 @@ export default function ActiveWorkout() {
               className={`rounded-2xl py-4 items-center mb-8 ${
                 isSaving ||
                 workoutExercises.length === 0 ||
-                workoutExercises.some(
-                  (exercise = exercise.sets.some(set => !set.isCompleted)),
+                workoutExercises.some(exercise =>
+                  exercise.sets.some(set => !set.isCompleted),
                 )
                   ? ' bg-gray-400'
                   : 'bg-green-600 active:bg-green-700'

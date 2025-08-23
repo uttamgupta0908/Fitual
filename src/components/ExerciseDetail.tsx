@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // import { API_URL } from '@env';
-const API_URL = 'http://192.168.1.8:5000';
+const API_URL = 'http://192.168.1.11:5000';
 
 import {
   View,
@@ -13,12 +13,7 @@ import {
   Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  useNavigation,
-  useRoute,
-  RouteProp,
-  Link,
-} from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { CircleX, HeartPulse, Play } from 'lucide-react-native';
 
 import { fetchExercisesFromAPI, ExerciseType } from '../utils/exercise';
@@ -120,13 +115,13 @@ export default function ExerciseDetail() {
 
       const data = await res.json();
 
-      if (data?.message) {
-        setAiGuidance(data.message);
+      if (data?.response) {
+        setAiGuidance(data.response);
       } else {
         setAiGuidance('No guidance returned.');
       }
     } catch (err) {
-      console.error('Failed to fetch Gemini AI response', err);
+      console.error('Gemini AI response', err);
       setAiGuidance('Error retrieving guidance.');
     } finally {
       setAiLoading(false);

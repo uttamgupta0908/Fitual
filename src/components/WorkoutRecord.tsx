@@ -31,7 +31,7 @@ export default function WorkoutRecord() {
   const [deleting, setDeleting] = useState(false);
   const [workout, setWorkout] = useState<Workout[]>([]);
 
-  const API_URL = 'http://192.168.1.8:5000';
+  const API_URL = 'http://192.168.1.11:5000';
 
   const fetchWorkout = async () => {
     if (!user?.id) return;
@@ -110,7 +110,7 @@ export default function WorkoutRecord() {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: deleteWorkout,
+          onPress: () => deleteWorkout(workout.id, setDeleting, navigation),
         },
       ],
     );
@@ -333,7 +333,7 @@ items-center justify-center"
                     <Text className="text-sm font-medium text-gray-900">
                       {exerciseData.sets
                         .reduce((total, set) => {
-                          return total + (set.weight || 0)(set.reps || 0);
+                          return total + (set.weight || 0) * (set.reps || 0);
                         }, 0)
                         .toLocaleString()}{' '}
                       {exerciseData.sets[0]?.weightUnit || 'kg'}
