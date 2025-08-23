@@ -15,7 +15,7 @@
 // import ActiveWorkout from '../components/ActiveWorkout';
 
 // // import { API_URL } from '@env';
-// const API_URL = 'http://192.168.1.8:5000';
+// const API_URL = 'http://192.168.1.10:5000';
 
 // const Stack = createNativeStackNavigator();
 

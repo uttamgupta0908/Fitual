@@ -13,7 +13,14 @@ import { fetchWorkoutsFromAPI, Workout } from '../../utils/workout';
 
 import { formatDuration } from '../../utils/formatworkout';
 import { useNavigation } from '@react-navigation/native';
-import { ChevronRight, Dumbbell, Play, Timer } from 'lucide-react-native';
+import {
+  ChevronRight,
+  Dumbbell,
+  HeartPlus,
+  Play,
+  Timer,
+} from 'lucide-react-native';
+import formatDate from '../../utils/formateDate';
 
 export default function Home() {
   const navigation = useNavigation();
@@ -23,9 +30,8 @@ export default function Home() {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchWorkouts = async () => {
-    if (!user?.id) return;
     try {
-      const results = await fetchWorkoutsFromAPI(user.id);
+      const results = await fetchWorkoutsFromAPI();
       setWorkouts(results);
     } catch (error) {
       console.error('Error fetching workouts:', error);
@@ -52,25 +58,6 @@ export default function Home() {
   );
   const averageDuration =
     totalDuration > 0 ? Math.round(totalDuration / totalWorkouts) : 0;
-
-  const formatDate = (dataString: string) => {
-    const date = new Date(dataString);
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    if (date.toDateString() === today.toDateString()) {
-      return 'Today';
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return 'Yesterday';
-    } else {
-      return date.toLocaleDateString('en-US ', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-      });
-    }
-  };
 
   const getTotalSets = (workout: Workout) => {
     return (
@@ -176,7 +163,7 @@ items-center justify-center mr-4"
           <View className="flex-row gap-4">
             <TouchableOpacity
               onPress={() => navigation.navigate('History')}
-              className="bg-white rounded-2x1 p-4 flex-1 shadow-sm border
+              className="bg-white rounded-2xl p-4 flex-1 shadow-sm border
 border-gray-100"
               activeOpacity={0.7}
             >
@@ -194,16 +181,12 @@ items-center justify-center mb-3"
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => navigation.navigate('Exercises')}
-              className="bg-white rounded-2xl p-4 flex-1 shadow-sm border
-border-gray-100"
+              onPress={() => navigation.navigate('Exercise')}
+              className="bg-white rounded-2xl p-4 flex-1 shadow-sm border border-gray-100"
               activeOpacity={0.7}
             >
               <View className="items-center">
-                <View
-                  className="w-12 h-12 bg-gray-100 rounded-full
-items-center justify-center mb-3"
-                >
+                <View className="w-12 h-12 bg-gray-100 rounded-full items-center justify-center mb-3">
                   <Dumbbell size={24} color="#6B7280" />
                 </View>
                 <Text className="text-gray-900 font-medium text-center">
@@ -213,6 +196,81 @@ items-center justify-center mb-3"
             </TouchableOpacity>
           </View>
         </View>
+        {/* Last Workout */}
+        {lastWorkout && (
+          <View className="px-6 mb-8">
+            <Text className="text-lg font-semibold text-gray-900 mb-4">
+              Last Workout
+            </Text>
+            <TouchableOpacity
+              className="bg-white rounded-2xl p-6 shadow-sm border
+border-gray-100"
+              onPress={() =>
+                navigation.navigate('WorkoutRecord', { id: lastWorkout.id })
+              }
+              activeOpacity={0.7}
+            >
+              <View className="flex-row items-center justify-between mb-4">
+                <View>
+                  <Text className="text-lg font-semibold text-gray-900">
+                    {lastWorkout.date
+                      ? formatDate(lastWorkout.date)
+                      : 'No Date'}
+                  </Text>
+                  <View className="flex-row items-center mt-1">
+                    <Timer size={16} color="#6B7280" />
+                    <Text className="text-gray-600 ml-2">
+                      {lastWorkout.duration
+                        ? formatDuration(lastWorkout.duration)
+                        : 'Duration not recorder'}
+                    </Text>
+                  </View>
+                </View>
+                <View className="bg-blue-100 rounded-full w-12 h-12 items-center justify-center">
+                  <HeartPlus size={24} color="#3B82F6" />
+                </View>
+              </View>
+              <View className="flex-row items-center justify-between">
+                <Text className="text-gray-600">
+                  {lastWorkout.exercises?.length || 0} exercises.{''}
+                  {getTotalSets(lastWorkout)} sets
+                </Text>
+                <ChevronRight size={20} color="#6B7280" />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+        {/*  Empty State for no workout */}
+        {totalWorkouts === 0 && (
+          <View className="px-6 mb-8">
+            <View
+              className="bg-white rounded-2xl p-8 items-center shadow-sm
+border border-gray-100"
+            >
+              <View
+                className="w-16 h-16 bg-blue-100 rounded-full items-center
+justify-center mb-4"
+              >
+                <Dumbbell size={32} color="#3B82F6" />
+              </View>
+              <Text className="text-xl font-semibold text-gray-900 mb-2">
+                Ready to start your fitness journey?
+              </Text>
+              <Text className="text-gray-600 text-center mb-4">
+                Track your workouts and see your progress over time
+              </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Workout')}
+                className="bg-blue-600 rounded-xl px-6 -3"
+                activeOpacity={0.8}
+              >
+                <Text className="text-white font-semibold">
+                  Start Your First Workout
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

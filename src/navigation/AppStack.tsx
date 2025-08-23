@@ -6,6 +6,8 @@ import WorkoutDetail from '../components/WorkoutDetail';
 import WorkoutRecord from '../components/WorkoutRecord';
 import ActiveWorkout from '../components/ActiveWorkout';
 import ExerciseSelectionModel from '../components/ExerciseSelectionModel';
+import { signin } from '../utils/auth';
+import SignInScreen from '../screens/(auth)/SignInScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +47,7 @@ export default function AppStack() {
         name="ExerciseSelectionModel"
         component={ExerciseSelectionModel}
       /> */}
+      <Stack.Screen name="SignIn" component={SignInScreen} />
     </Stack.Navigator>
   );
 }

@@ -33,9 +33,9 @@ export default function Exercises() {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchExercises = async () => {
-    if (!user?.id) return;
     try {
       const data = await fetchExercisesFromAPI();
+      console.log({ data });
       setExercises(data);
       setFilteredExercises(data);
     } catch (error) {
@@ -47,7 +47,7 @@ export default function Exercises() {
 
   useEffect(() => {
     fetchExercises();
-  }, [user?.id]);
+  }, []);
 
   useEffect(() => {
     const filtered = exercises.filter(exercise =>

@@ -85,9 +85,8 @@ export default function Profile() {
   const navigation = useNavigation();
 
   const fetchWorkouts = async () => {
-    if (!user?.id) return;
     try {
-      const results = await fetchWorkoutsFromAPI(user.id);
+      const results = await fetchWorkoutsFromAPI();
       setWorkouts(results);
     } catch (error) {
       console.error('Error fetching workouts:', error);
@@ -134,10 +133,11 @@ export default function Profile() {
         style: 'destructive',
         onPress: async () => {
           await signout();
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'Signin' }],
-          });
+          // navigation.reset({
+          //   index: 0,
+          //   routes: [{ name: 'Signin' }],
+          // });
+          navigation.navigate('SignIn');
         },
       },
     ]);

@@ -25,7 +25,7 @@ export default function SignUpScreen({ navigation }: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  
+
   const { signUp } = useAuth();
   const handleSignup = async () => {
     if (!name || !email || !password) {

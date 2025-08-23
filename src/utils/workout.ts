@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import { API_URL } from '@env';
-const API_URL = 'http://192.168.1.8:5000';
+const API_URL = 'http://192.168.1.11:5000';
 
 export type WeightUnit = 'kg' | 'lbs';
 
@@ -32,12 +32,45 @@ export type Workout = {
   duration: number; // seconds
   exercises: WorkoutExercise[];
 };
+export type WorkoutExercisePayload = {
+  exerciseId: number;
+  sets: number;
+  reps: number;
+  weight: number;
+  weightUnit: WeightUnit;
+};
 
-export const fetchWorkoutsFromAPI = async (
-  userId: number,
-): Promise<Workout[]> => {
+export type WorkoutPayload = {
+  userId: number;
+  date: string; // ISO string
+  duration: number; // seconds
+  exercises: WorkoutExercisePayload[];
+};
+
+export const saveWorkoutToAPI = async (payload: WorkoutPayload) => {
   const token = await AsyncStorage.getItem('token');
-  const response = await fetch(`${API_URL}/workouts/${userId}`, {
+
+  const response = await fetch(`${API_URL}/workouts`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to save workout');
+  }
+
+  const data = await response.json();
+  return data; // returns the saved workout object
+};
+
+export const fetchWorkoutsFromAPI = async (): Promise<Workout[]> => {
+  const token = await AsyncStorage.getItem('token');
+  const response = await fetch(`${API_URL}/workouts`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -47,5 +80,6 @@ export const fetchWorkoutsFromAPI = async (
   }
 
   const data: Workout[] = await response.json();
+
   return data;
 };

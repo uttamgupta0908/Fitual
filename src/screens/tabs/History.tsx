@@ -6,6 +6,7 @@ import {
   RefreshControl,
   ActivityIndicator,
   TouchableOpacity,
+  StatusBar,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import {
@@ -23,6 +24,7 @@ import { formatDuration } from '../../utils/formatworkout';
 
 import { Dumbbell, HeartPlus, Timer } from 'lucide-react-native';
 import WorkoutDetail from '../../components/WorkoutDetail';
+import formatDate from '../../utils/formateDate';
 
 type RootStackParamList = {
   History: { refresh?: boolean };
@@ -38,7 +40,6 @@ export default function History() {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchWorkouts = async () => {
-    if (!user?.id) return;
     try {
       const data = await fetchWorkoutsFromAPI();
 
@@ -67,35 +68,6 @@ export default function History() {
     setRefreshing(true);
     await fetchWorkouts();
     setRefreshing(false);
-  };
-
-  const formatDate = (dataString: string) => {
-    const date = new Date(dataString);
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    if (date.toDateString() === today.toDateString()) {
-      return 'Today';
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return 'Yesterday';
-    } else {
-      return date.toLocaleDateString('en-US ', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-      });
-    }
-
-    //shorter way to implement the code
-    //   if (date.toDateString() === today.toDateString()) return 'Today';
-    //   if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
-
-    //   return date.toLocaleDateString('en-US', {
-    //     weekday: 'short',
-    //     month: 'short',
-    //     day: 'numeric',
-    //   });
   };
 
   const formatWorkoutDuration = (seconds?: number) => {
@@ -144,7 +116,8 @@ export default function History() {
     );
   }
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-white">
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
       {/* header*/}
       <View className="px-6 py-4 bg-white border-b border-gray-200">
         <Text className="text-2xl font-bold text-gray-900">
@@ -204,7 +177,7 @@ export default function History() {
                 <View className="flex-row items-center justify-between mb-4">
                   <View className="flex-1">
                     <Text className="text-lg font-semibold text-gray-900">
-                      {formatDate(workout.date || '')}
+                      {workout.date ? formatDate(workout.date) : 'N/A'}
                     </Text>
 
                     <View className="flex-row items-center mt-1">

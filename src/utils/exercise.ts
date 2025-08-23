@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export type ExerciseType = {
   id: number;
   name: string;
@@ -10,10 +12,14 @@ export type ExerciseType = {
 };
 
 // import { API_URL } from '@env';
-const API_URL = 'http://192.168.1.8:5000';
+const API_URL = 'http://192.168.1.11:5000';
 
 export const fetchExercisesFromAPI = async (): Promise<ExerciseType[]> => {
-  const res = await fetch(`${API_URL}/exercises`);
+  const token = await AsyncStorage.getItem('token');
+  const res = await fetch(`${API_URL}/exercises`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
   if (!res.ok) {
     const error = await res.json();
     throw new Error(error.error || 'Failed to fetch exercises');
