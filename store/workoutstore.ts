@@ -12,7 +12,7 @@ export interface WorkoutSet {
 
 interface WorkoutExercise {
   id: string;
-  userId: string;
+  exerciseId: number;
   name: string;
   sets: WorkoutSet[];
 }
@@ -23,7 +23,7 @@ interface WorkoutStore {
   weightUnit: 'kg' | 'lbs';
 
   //actions
-  addExerciseToWorkout: (exercise: { name: string; userId: string }) => void;
+  addExerciseToWorkout: (exercise: { id: number; name: string }) => void;
   setWorkoutExercises: (
     exercises:
       | WorkoutExercise[]
@@ -42,8 +42,8 @@ export const useWorkoutStore = create<WorkoutStore>()(
       addExerciseToWorkout: exercise =>
         set(state => {
           const newExercise: WorkoutExercise = {
-            id: Math.random().toString(),
-            userId: exercise.userId,
+            exerciseId: exercise.id,
+            // userId: exercise.userId,
             name: exercise.name,
             sets: [],
           };
