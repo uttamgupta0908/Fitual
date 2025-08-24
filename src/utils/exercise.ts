@@ -11,8 +11,7 @@ export type ExerciseType = {
   imageUrl: string;
 };
 
-// import { API_URL } from '@env';
-const API_URL = 'http://192.168.1.11:5000';
+import { API_URL } from '@env';
 
 export const fetchExercisesFromAPI = async (): Promise<ExerciseType[]> => {
   const token = await AsyncStorage.getItem('token');
@@ -26,16 +25,3 @@ export const fetchExercisesFromAPI = async (): Promise<ExerciseType[]> => {
   }
   return res.json();
 };
-
-// export const Exercise = async () => {
-//   const API_URL = 'http://localhost:5000/';
-
-//   const res = await fetch(`${API_URL}/exercises`);
-
-//   if (!res.ok) {
-//     const error = await res.json();
-//     throw new Error(error.error || 'Failed to fetch exercises');
-//   }
-
-//   return res.json(); // Returns list of exercises
-// };

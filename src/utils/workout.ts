@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// import { API_URL } from '@env';
-const API_URL = 'http://192.168.1.11:5000';
+import { API_URL } from '@env';
 
 export type WeightUnit = 'kg' | 'lbs';
 
@@ -71,6 +70,21 @@ export const saveWorkoutToAPI = async (payload: WorkoutPayload) => {
 export const fetchWorkoutsFromAPI = async (): Promise<Workout[]> => {
   const token = await AsyncStorage.getItem('token');
   const response = await fetch(`${API_URL}/workouts`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to fetch workouts');
+  }
+
+  const data: Workout[] = await response.json();
+
+  return data;
+};
+export const fetchWorkoutById = async (workoutId: string): Promise<Workout> => {
+  const token = await AsyncStorage.getItem('token');
+  const response = await fetch(`${API_URL}/workouts/${workoutId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
