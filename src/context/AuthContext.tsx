@@ -176,6 +176,8 @@ import {
   getProfile,
   signout as signoutUtil,
 } from '../utils/auth';
+import { navigationRef } from '../../App';
+import { Alert } from 'react-native';
 
 interface User {
   id: number;
@@ -238,13 +240,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
     try {
       const data = await signin(email, password);
-      setToken(data.token);
-      setUser(data.user);
-      await AsyncStorage.setItem('token', data.token);
+      if (data) {
+        setToken(data.token);
+        setUser(data.user);
+        await AsyncStorage.setItem('token', data.token);
+        await AsyncStorage.setItem('token', data.token);
+        navigationRef.current?.navigate('TABS'); // or your main screen
+      }
     } catch (e: any) {
-      console.error('Sign in error:', e);
+      Alert.alert('Login Failed', e.message, [
+        { text: 'Ok' },
+        { text: 'Retry', onPress: () => signIn(email, password) },
+      ]);
+      console.log('Sign in error:', e);
       setError(e.message || 'An unexpected error occurred during sign in.');
-      throw e;
+      // throw e;
     } finally {
       setIsLoading(false);
     }
