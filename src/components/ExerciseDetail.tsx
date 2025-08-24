@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-// import { API_URL } from '@env';
-const API_URL = 'http://192.168.1.11:5000';
+import { API_URL } from '@env';
 
 import {
   View,
@@ -36,67 +35,6 @@ export default function ExerciseDetail() {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiMessage, setAiMessage] = useState('');
 
-  // const getAiGuidance = async () => {
-  //   const prompt = `
-  // Explain the exercise "${exercise?.name}" for a beginner with tips and safety instructions in markdown format.
-  // `;
-
-  //   try {
-  //     const res = await fetch(`${API_URL}/api/ai/gemini`, {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ prompt }),
-  //     });
-
-  //     const data = await res.json();
-  //     console.log('AI Output:', data.message);
-  //   } catch (err) {
-  //     console.error('Failed to fetch Gemini AI response', err);
-  //   }
-  // };
-
-  // const fetchAIGuidance = async () => {
-  //   if (!exercise) return;
-  //   setLoading(true);
-  //   const prompt = `
-  //   Explain the exercise in detail and for a beginner.
-
-  //   The exercise name is: ${exercise.name}
-
-  //   Keep it short and concise. Use markdown formatting.
-
-  //   Use the following format:
-
-  //   ## Equipment Required
-
-  //   ## Instructions
-
-  //   ### Tips
-
-  //   ### Variations
-
-  //   ### Safety
-
-  //   keep spacing between the headings and the content.
-  //   `;
-  //   try {
-  //     const response = await fetch('http://192.168.1.5:5000/api/ai', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ exerciseName: exercise?.name }),
-  //     });
-
-  //     const data = await response.json();
-  //     setAiMessage(data.message);
-  //   } catch (error) {
-  //     console.error('Fetch error:', error);
-  //     setAiMessage('Error loading guidance.');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const getAiGuidance = async () => {
     if (!exercise) return;
 
