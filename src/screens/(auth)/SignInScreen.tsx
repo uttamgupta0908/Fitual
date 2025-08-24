@@ -36,11 +36,9 @@ export default function SignInScreen({ navigation }: Props) {
 
     setLoading(true);
     try {
-      await signIn(email, password);
-      const data = await signin(email, password);
-      await AsyncStorage.setItem('token', data.token);
-      navigation.navigate('TABS'); // or your main screen
+      const data = await signIn(email, password);
     } catch (err: any) {
+      console.log({ err });
       Alert.alert('Error', err.message || 'Sign in failed');
     } finally {
       setLoading(false);
