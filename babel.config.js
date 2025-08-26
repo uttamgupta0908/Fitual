@@ -14,6 +14,20 @@ module.exports = function (api) {
           allowUndefined: true,
         },
       ],
+      // Add babel-plugin-module-resolver here
+      [
+        'module-resolver',
+        {
+          root: ['./'],
+          alias: {
+            '~': './src', // Example alias: import { Button } from '~/components/Button';
+            '@components': './src/components',
+            '@navigation': './src/navigation',
+            '@screens': './src/screens',
+            '@assets': './src/assets',
+          },
+        },
+      ],
     ],
   };
 };

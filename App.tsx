@@ -1,5 +1,6 @@
 import React, { createRef } from 'react';
 import {
+  createNavigationContainerRef,
   NavigationContainer,
   NavigationContainerRef,
 } from '@react-navigation/native';
@@ -7,15 +8,21 @@ import {
 import './global.css';
 import RootNavigator from './src/navigation/RootNavigator';
 import { AuthProvider } from './src/context/AuthContext';
-
-export const navigationRef = createRef<NavigationContainerRef<any>>();
+import BootSplash from 'react-native-bootsplash';
+// import { ThemeProvider } from '~/context/ThemeContext';
+export const navigationRef = createNavigationContainerRef();
 
 export default function App() {
   return (
-    <NavigationContainer ref={navigationRef}>
-      <AuthProvider>
+    <AuthProvider>
+      <NavigationContainer
+        ref={navigationRef}
+        onReady={() => BootSplash.hide()}
+      >
+        {/* <ThemeProvider> */}
         <RootNavigator />
-      </AuthProvider>
-    </NavigationContainer>
+        {/* </ThemeProvider> */}
+      </NavigationContainer>
+    </AuthProvider>
   );
 }

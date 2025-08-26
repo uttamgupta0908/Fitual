@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '@env';
+import { navigationRef } from '../../App';
 
 interface User {
   id: number;
@@ -63,15 +64,4 @@ export const getProfile = async (): Promise<User> => {
 
   const data = await res.json();
   return data.user;
-};
-
-// const fetchAIGuidance = async (exerciseName: string) => {
-//   const res = await fetch(`${API_URL}/api/ai`, {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify({ exerciseName }),
-//   });
-// };
-export const signout = async (): Promise<void> => {
-  await AsyncStorage.removeItem('token');
 };
