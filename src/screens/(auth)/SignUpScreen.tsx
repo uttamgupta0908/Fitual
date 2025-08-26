@@ -6,12 +6,13 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  Image,
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { signup } from '../../utils/auth';
 import LinearGradient from 'react-native-linear-gradient';
 import { useAuth } from '../../context/AuthContext';
-
+import Logo from '@assets/logo.png';
 type RootStackParamList = {
   SignIn: undefined;
 };
@@ -37,7 +38,7 @@ export default function SignUpScreen({ navigation }: Props) {
     try {
       await signup(name, email, password);
       Alert.alert('Success', 'Account created');
-      navigation.navigate('SignIn');
+      navigation.navigate('SIGN_IN');
     } catch (err: any) {
       Alert.alert('Error', err.message);
     } finally {
@@ -46,7 +47,7 @@ export default function SignUpScreen({ navigation }: Props) {
   };
 
   return (
-    <LinearGradient colors={['#1f1c2c', '#928DAB']} style={{ flex: 1 }}>
+    <LinearGradient colors={['#121212', '#1e1e1e']} style={{ flex: 1 }}>
       <View
         style={{
           flex: 1,
@@ -55,19 +56,21 @@ export default function SignUpScreen({ navigation }: Props) {
           padding: 24,
         }}
       >
+        {/* Top Icon */}
+        {/* < size={80} color="#6C63FF" style={{ marginBottom: 20 }} /> */}
+        <Image source={Logo} style={{ width: 100, height: 100 }} />
+
         <Text
           style={{
             color: '#fff',
             fontSize: 36,
             fontWeight: '800',
             marginBottom: 12,
-            letterSpacing: 0.5,
           }}
         >
           Create Account
         </Text>
-
-        <Text style={{ color: '#ccc', fontSize: 16, marginBottom: 32 }}>
+        <Text style={{ color: '#e0e0e0', fontSize: 16, marginBottom: 32 }}>
           Sign up to get started
         </Text>
 
@@ -76,16 +79,16 @@ export default function SignUpScreen({ navigation }: Props) {
             value={name}
             onChangeText={setName}
             placeholder="Full Name"
-            placeholderTextColor="#888"
+            placeholderTextColor="#aaa"
             style={{
-              backgroundColor: '#2c2c2e',
+              backgroundColor: '#2c2c2c',
               color: '#fff',
               borderRadius: 12,
               marginBottom: 16,
               padding: 14,
               fontSize: 16,
               borderWidth: 1,
-              borderColor: '#3c3c3c',
+              borderColor: '#444',
             }}
           />
 
@@ -93,18 +96,18 @@ export default function SignUpScreen({ navigation }: Props) {
             value={email}
             onChangeText={setEmail}
             placeholder="Email Address"
-            placeholderTextColor="#888"
+            placeholderTextColor="#aaa"
             keyboardType="email-address"
             autoCapitalize="none"
             style={{
-              backgroundColor: '#2c2c2e',
+              backgroundColor: '#2c2c2c',
               color: '#fff',
               borderRadius: 12,
               marginBottom: 16,
               padding: 14,
               fontSize: 16,
               borderWidth: 1,
-              borderColor: '#3c3c3c',
+              borderColor: '#444',
             }}
           />
 
@@ -112,17 +115,17 @@ export default function SignUpScreen({ navigation }: Props) {
             value={password}
             onChangeText={setPassword}
             placeholder="Password"
-            placeholderTextColor="#888"
+            placeholderTextColor="#aaa"
             secureTextEntry
             style={{
-              backgroundColor: '#2c2c2e',
+              backgroundColor: '#2c2c2c',
               color: '#fff',
               borderRadius: 12,
               marginBottom: 24,
               padding: 14,
               fontSize: 16,
               borderWidth: 1,
-              borderColor: '#3c3c3c',
+              borderColor: '#444',
             }}
           />
 
@@ -146,10 +149,10 @@ export default function SignUpScreen({ navigation }: Props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate('SignIn')}
+            onPress={() => navigation.navigate('SIGN_IN')}
             style={{ marginTop: 20, alignItems: 'center' }}
           >
-            <Text style={{ color: '#bbb' }}>
+            <Text style={{ color: '#e0e0e0' }}>
               Already have an account?{' '}
               <Text style={{ color: '#fff', fontWeight: '600' }}>Sign in</Text>
             </Text>
