@@ -6,7 +6,7 @@ import AppStack from './AppStack';
 
 export default function RootNavigator() {
   const { isLoggedIn, isLoading } = useAuth();
-
+  console.log({ isLoggedIn });
   if (isLoading) {
     return (
       <View className="flex-1 justify-center items-center">
