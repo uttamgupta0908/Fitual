@@ -19,9 +19,7 @@ import { fetchExercisesFromAPI, ExerciseType } from '../utils/exercise';
 import Markdown from 'react-native-markdown-display';
 
 type ExerciseDetailParams = {
-  ExerciseDetail: {
-    id: number;
-  };
+  ExerciseDetail: { id: number };
 };
 
 export default function ExerciseDetail() {
@@ -33,16 +31,13 @@ export default function ExerciseDetail() {
   const [loading, setLoading] = useState(true);
   const [aiGuidance, setAiGuidance] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
-  const [aiMessage, setAiMessage] = useState('');
 
   const getAiGuidance = async () => {
     if (!exercise) return;
 
     setAiLoading(true);
 
-    const prompt = `
-    Explain the exercise "${exercise.name}" for a beginner with tips and safety instructions in markdown format.
-    `;
+    const prompt = `Explain the exercise "${exercise.name}" for a beginner with tips and safety instructions in markdown format.`;
 
     try {
       const res = await fetch(`${API_URL}/gemini`, {
@@ -52,12 +47,7 @@ export default function ExerciseDetail() {
       });
 
       const data = await res.json();
-
-      if (data?.response) {
-        setAiGuidance(data.response);
-      } else {
-        setAiGuidance('No guidance returned.');
-      }
+      setAiGuidance(data?.response ?? 'No guidance returned.');
     } catch (err) {
       console.error('Gemini AI response', err);
       setAiGuidance('Error retrieving guidance.');
@@ -78,152 +68,272 @@ export default function ExerciseDetail() {
         setLoading(false);
       }
     };
-
     fetchExercise();
   }, [id]);
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <StatusBar barStyle="light-content" backgroundColor="#000" />
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#111827' }}>
+      <StatusBar barStyle="light-content" backgroundColor="#111827" />
 
       {/* Back Button */}
-      <View className="absolute top-12 left-4 z-10">
+      <View style={{ position: 'absolute', top: 48, left: 16, zIndex: 10 }}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          className="w-10 h-10 bg-black/20 rounded-full items-center justify-center"
+          style={{
+            width: 40,
+            height: 40,
+            backgroundColor: 'rgba(0,0,0,0.2)',
+            borderRadius: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
           <CircleX size={24} color="white" />
         </TouchableOpacity>
       </View>
 
       {loading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#000" />
+        <View
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <ActivityIndicator size="large" color="#3B82F6" />
         </View>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Image */}
-          <View className="h-80 bg-gray-200 relative">
+          <View
+            style={{
+              height: 320,
+              backgroundColor: '#1F2937',
+              position: 'relative',
+            }}
+          >
             {exercise?.imageUrl ? (
               <Image
                 source={{ uri: exercise.imageUrl }}
-                className="w-full h-full"
+                style={{ width: '100%', height: '100%' }}
                 resizeMode="cover"
               />
             ) : (
-              <View className="flex-1 bg-indigo-500 items-center justify-center">
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: '#374151',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 <HeartPulse size={80} color="white" />
               </View>
             )}
           </View>
 
           {/* Exercise Details */}
-          <View className="px-6 py-6">
-            <Text className="text-3xl font-bold text-gray-900 mb-2">
+          <View style={{ padding: 24 }}>
+            <Text
+              style={{
+                fontSize: 28,
+                fontWeight: 'bold',
+                color: '#FFFFFF',
+                marginBottom: 8,
+              }}
+            >
               {exercise?.name}
             </Text>
 
             {/* Difficulty Badge */}
-            <View className="flex-row items-center mb-4">
+            <View style={{ flexDirection: 'row', marginBottom: 16 }}>
               <View
-                className={`px-3 py-1 rounded-full ${
-                  exercise?.difficulty === 'beginner'
-                    ? 'bg-green-500'
-                    : exercise?.difficulty === 'intermediate'
-                    ? 'bg-yellow-500'
-                    : 'bg-red-500'
-                }`}
+                style={{
+                  paddingHorizontal: 12,
+                  paddingVertical: 4,
+                  borderRadius: 9999,
+                  backgroundColor:
+                    exercise?.difficulty === 'beginner'
+                      ? '#22C55E'
+                      : exercise?.difficulty === 'intermediate'
+                      ? '#FACC15'
+                      : '#EF4444',
+                }}
               >
-                <Text className="text-xs font-semibold text-white capitalize">
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontWeight: '600',
+                    color: '#FFFFFF',
+                    textTransform: 'capitalize',
+                  }}
+                >
                   {exercise?.difficulty}
                 </Text>
               </View>
             </View>
 
             {/* Muscle Group & Equipment */}
-            <View className="flex-row space-x-4 mb-6">
-              <View className="flex-1">
-                <Text className="text-sm text-gray-500 mb-1">Muscle Group</Text>
-                <Text className="text-base font-medium text-gray-900">
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 24,
+              }}
+            >
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={{ fontSize: 12, color: '#9CA3AF', marginBottom: 4 }}
+                >
+                  Muscle Group
+                </Text>
+                <Text
+                  style={{ fontSize: 16, fontWeight: '500', color: '#FFFFFF' }}
+                >
                   {exercise?.muscleGroup}
                 </Text>
               </View>
-              <View className="flex-1">
-                <Text className="text-sm text-gray-500 mb-1">Equipment</Text>
-                <Text className="text-base font-medium text-gray-900">
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={{ fontSize: 12, color: '#9CA3AF', marginBottom: 4 }}
+                >
+                  Equipment
+                </Text>
+                <Text
+                  style={{ fontSize: 16, fontWeight: '500', color: '#FFFFFF' }}
+                >
                   {exercise?.equipment}
                 </Text>
               </View>
             </View>
 
             {/* Description */}
-            <View className="mb-6">
-              <Text className="text-lg font-semibold text-gray-900 mb-3">
+            <View style={{ marginBottom: 24 }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: '600',
+                  color: '#FFFFFF',
+                  marginBottom: 8,
+                }}
+              >
                 Description
               </Text>
-              <Text className="text-base text-gray-700 leading-6">
+              <Text style={{ fontSize: 16, color: '#D1D5DB', lineHeight: 24 }}>
                 {exercise?.description}
               </Text>
             </View>
 
             {/* Video Section */}
             {exercise?.videoUrl && (
-              <View className="mb-6">
-                <Text className="text-xl font-semibold text-gray-800 mb-3">
+              <View style={{ marginBottom: 24 }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: '600',
+                    color: '#FFFFFF',
+                    marginBottom: 8,
+                  }}
+                >
                   Video Tutorial
                 </Text>
                 <TouchableOpacity
-                  className="bg-green-500 rounded-xl p-4 flex-row items-center"
+                  style={{
+                    flexDirection: 'row',
+                    backgroundColor: '#22C55E',
+                    borderRadius: 16,
+                    padding: 16,
+                    alignItems: 'center',
+                  }}
                   onPress={() => Linking.openURL(exercise.videoUrl)}
                 >
-                  <View className="w-12 h-12 bg-white rounded-full items-center justify-center mr-4">
-                    <Play size={20} color="green" />
+                  <View
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 24,
+                      backgroundColor: '#FFFFFF',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: 12,
+                    }}
+                  >
+                    <Play size={20} color="#22C55E" />
                   </View>
                   <View>
-                    <Text className="text-white font-semibold text-lg">
+                    <Text
+                      style={{
+                        color: '#FFFFFF',
+                        fontWeight: '600',
+                        fontSize: 16,
+                      }}
+                    >
                       Watch Tutorial
                     </Text>
-                    <Text className="text-red-100 text-sm">
+                    <Text style={{ color: '#D1FAE5', fontSize: 12 }}>
                       Learn proper form
                     </Text>
                   </View>
                 </TouchableOpacity>
               </View>
             )}
-            {/* Ai guidd */}
+
+            {/* AI Guidance */}
             {(aiGuidance || aiLoading) && (
-              <View className="mb-6">
-                <View className="flex-row items-center mb-3">
+              <View style={{ marginBottom: 24 }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: 12,
+                  }}
+                >
                   <HeartPulse size={24} color="#3B82F6" />
-                  <Text className="text-xl font-semibold text-gray-800 ml-2">
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: '600',
+                      color: '#FFFFFF',
+                      marginLeft: 8,
+                    }}
+                  >
                     AI Coach says...
                   </Text>
                 </View>
                 {aiLoading ? (
-                  <View className="bg-gray-50 rounded-xl p-4 items-center">
+                  <View
+                    style={{
+                      backgroundColor: '#1F2937',
+                      borderRadius: 16,
+                      padding: 16,
+                      alignItems: 'center',
+                    }}
+                  >
                     <ActivityIndicator size="small" color="#3B82F6" />
-                    <Text className="text-gray-600 mt-2">
+                    <Text style={{ color: '#9CA3AF', marginTop: 8 }}>
                       Getting personalized guidance...
                     </Text>
                   </View>
                 ) : (
-                  <View className="bg-blue-50 rounded-xl p-4 border-l-4 border-blue-500">
+                  <View
+                    style={{
+                      backgroundColor: '#1E40AF',
+                      borderRadius: 16,
+                      padding: 16,
+                      borderLeftWidth: 4,
+                      borderLeftColor: '#3B82F6',
+                    }}
+                  >
                     <Markdown
                       style={{
-                        body: {
-                          paddingBottom: 20,
-                        },
+                        body: { color: '#FFFFFF', paddingBottom: 20 },
                         heading2: {
                           fontSize: 18,
                           fontWeight: 'bold',
-                          color: '#1f2937',
+                          color: '#FFFFFF',
                           marginTop: 12,
                           marginBottom: 6,
                         },
                         heading3: {
                           fontSize: 16,
                           fontWeight: '600',
-                          color: '#374151',
+                          color: '#D1D5DB',
                           marginTop: 0,
                           marginBottom: 4,
                         },
@@ -235,42 +345,66 @@ export default function ExerciseDetail() {
                 )}
               </View>
             )}
-            {/* ------ */}
 
-            {/* Action button */}
-            <View className="mt-8 gap-2">
-              {/* ai coach */}
+            {/* Action Buttons */}
+            <View style={{ marginTop: 16, gap: 8 }}>
               <TouchableOpacity
-                className={`rounded-xl py-4 items-center ${
-                  aiLoading
-                    ? 'bg-gray-400'
+                style={{
+                  backgroundColor: aiLoading
+                    ? '#6B7280'
                     : aiGuidance
-                    ? 'bg-green-500'
-                    : 'bg-blue-500'
-                }`}
+                    ? '#22C55E'
+                    : '#3B82F6',
+                  paddingVertical: 16,
+                  borderRadius: 16,
+                  alignItems: 'center',
+                }}
                 onPress={getAiGuidance}
                 disabled={aiLoading}
               >
                 {aiLoading ? (
-                  <View className="flex-row items-center">
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <ActivityIndicator size="small" color="white" />
-                    <Text className="text-white font-bold text-lg ml-2">
+                    <Text
+                      style={{
+                        color: '#FFFFFF',
+                        fontWeight: '700',
+                        fontSize: 16,
+                        marginLeft: 8,
+                      }}
+                    >
                       Loading...
                     </Text>
                   </View>
                 ) : (
-                  <Text className="text-white font-bold text-lg">
+                  <Text
+                    style={{
+                      color: '#FFFFFF',
+                      fontWeight: '700',
+                      fontSize: 16,
+                    }}
+                  >
                     {aiGuidance
-                      ? 'Refresh AI Guidence'
-                      : 'Get AI Guidence on Form & Technique'}
+                      ? 'Refresh AI Guidance'
+                      : 'Get AI Guidance on Form & Technique'}
                   </Text>
                 )}
               </TouchableOpacity>
+
               <TouchableOpacity
-                className="bg-gray-200 rounded-xl py-4 items-center"
+                style={{
+                  backgroundColor: '#374151',
+                  paddingVertical: 16,
+                  borderRadius: 16,
+                  alignItems: 'center',
+                }}
                 onPress={() => navigation.goBack()}
               >
-                <Text className="text-gray-800 font-bold text-lg">Close</Text>
+                <Text
+                  style={{ color: '#FFFFFF', fontWeight: '700', fontSize: 16 }}
+                >
+                  Close
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
