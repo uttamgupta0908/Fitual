@@ -1,22 +1,21 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
+import React from 'react';
 import { ChevronRight, HeartPulse } from 'lucide-react-native';
-import { Image } from 'react-native';
-import { ExerciseType } from '../utils/exercise';
 import { Exercise } from '../utils/workout';
-import ExerciseDetail from './ExerciseDetail';
+
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case 'beginner':
-      return 'bg-green-500';
+      return '#22C55E';
     case 'intermediate':
-      return 'bg-yellow-500';
+      return '#FACC15';
     case 'advanced':
-      return 'bg-red-500';
+      return '#EF4444';
     default:
-      return 'bg-gray-500';
+      return '#6B7280';
   }
 };
+
 const getDifficultyText = (difficulty: string) => {
   switch (difficulty) {
     case 'beginner':
@@ -29,12 +28,7 @@ const getDifficultyText = (difficulty: string) => {
       return 'Unknown';
   }
 };
-// interface Exercise {
-//   name: string;
-//   description?: string;
-//   image?: { uri: string };
-//   difficulty: string;
-// }
+
 interface ExerciseCardProps {
   item: Exercise;
   onPress: () => void;
@@ -48,47 +42,94 @@ export default function ExerciseCard({
 }: ExerciseCardProps) {
   return (
     <TouchableOpacity
-      className="bg-white rounded-2xl mb-4 shadow-sm border border-gray-100"
       onPress={onPress}
+      style={{
+        backgroundColor: '#1F2937',
+        borderRadius: 24,
+        marginBottom: 16,
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: '#374151',
+      }}
     >
-      <View className="flex-row p-6">
-        <View className="w-20 h-20 bg-white rounded-xl mr-4 overflow-hidden">
+      <View style={{ flexDirection: 'row', padding: 24 }}>
+        {/* Image */}
+        <View
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 16,
+            marginRight: 16,
+            overflow: 'hidden',
+            backgroundColor: '#111827',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           {item.imageUrl ? (
             <Image
-              source={{ uri: item?.imageUrl }}
-              className="w-full h-full"
+              source={{ uri: item.imageUrl }}
+              style={{ width: '100%', height: '100%' }}
               resizeMode="contain"
             />
           ) : (
-            <View className=" w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 items-center justify-center">
+            <View
+              style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'linear-gradient(135deg, #3B82F6, #8B5CF6)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               <HeartPulse size={24} color="white" />
             </View>
           )}
         </View>
-        <View className="flex-1 justify-between">
+
+        {/* Info */}
+        <View style={{ flex: 1, justifyContent: 'space-between' }}>
           <View>
-            <Text className="text-lg font-bold text-gray-900 mb-1">
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: '#FFFFFF',
+                marginBottom: 4,
+              }}
+            >
               {item.name}
             </Text>
-            <Text className="text-sm text-gray-600 mb-2" numberOfLines={2}>
+            <Text
+              style={{ fontSize: 14, color: '#D1D5DB', marginBottom: 8 }}
+              numberOfLines={2}
+            >
               {item.description || 'No description available.'}
             </Text>
           </View>
-          <View className="flex-row items-center justify-between">
+
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
             <View
-              className={`px-3 py-1 rounded-full ${getDifficultyColor(
-                item.difficulty,
-              )}`}
+              style={{
+                backgroundColor: getDifficultyColor(item.difficulty),
+                paddingHorizontal: 12,
+                paddingVertical: 4,
+                borderRadius: 9999,
+              }}
             >
-              <Text className="text-xs font-semibold text-white">
+              <Text
+                style={{ fontSize: 12, fontWeight: '600', color: '#FFFFFF' }}
+              >
                 {getDifficultyText(item.difficulty)}
               </Text>
             </View>
-            {showChevron && (
-              <TouchableOpacity className="p-2">
-                <ChevronRight size={20} color="#6B7280" />
-              </TouchableOpacity>
-            )}
+            {showChevron && <ChevronRight size={20} color="#9CA3AF" />}
           </View>
         </View>
       </View>
