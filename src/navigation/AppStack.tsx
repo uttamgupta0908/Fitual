@@ -47,7 +47,6 @@ export default function AppStack() {
         name="ExerciseSelectionModel"
         component={ExerciseSelectionModel}
       /> */}
-      <Stack.Screen name="SignIn" component={SignInScreen} />
     </Stack.Navigator>
   );
 }
