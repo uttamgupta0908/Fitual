@@ -21,7 +21,7 @@ import { Dumbbell, HeartPlus, Timer } from 'lucide-react-native';
 import formatDate from '../../utils/formateDate';
 
 type RootStackParamList = {
-  History: { refresh?: Boolean };
+  History: { refresh?: boolean };
 };
 
 export default function History() {
