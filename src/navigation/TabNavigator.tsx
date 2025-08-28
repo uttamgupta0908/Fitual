@@ -26,10 +26,10 @@ const TabNavigator = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: 'blue',
+        tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'gray',
         tabBarBackground: () => (
-          <View style={{ backgroundColor: 'white', height: 100 }} />
+          <View style={{ backgroundColor: '#111827', height: 100 }} />
         ),
       })}
     >
