@@ -38,15 +38,13 @@ npm run ios
 ```sh
 cd backend
 npm install
-npx prisma migrate dev --name init
-npx prisma db seed
 npm run dev
 ```
 
 ### 🗄️ Database Configuration
 
 ```env
-DATABASE_URL="mysql://user:password@localhost:3306/fitual"
+DATABASE_URL="postgresql://user:password@localhost:3306/fitual"
 JWT_SECRET="your_jwt_secret"
 ```
 
