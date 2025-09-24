@@ -12,9 +12,13 @@ export type ExerciseType = {
 };
 
 import { API_URL } from '@env';
+import { storage } from '~/storage/mmkv';
+import { tokenKey } from '~/constant';
 
 export const fetchExercisesFromAPI = async (): Promise<ExerciseType[]> => {
-  const token = await AsyncStorage.getItem('token');
+  //   const token = await AsyncStorage.getItem('token');
+
+  const token = storage.getString(tokenKey);
   const res = await fetch(`${API_URL}/exercises`, {
     headers: { Authorization: `Bearer ${token}` },
   });

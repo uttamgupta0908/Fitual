@@ -5,7 +5,7 @@ import React, {
   useState,
   ReactNode,
 } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   signin,
   signup,
@@ -15,6 +15,8 @@ import {
 import { navigationRef } from '../../App';
 import { Alert } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
+import { storage } from '~/storage/mmkv';
+import { tokenKey, userKey } from '~/constant';
 
 interface User {
   id: number;
@@ -43,16 +45,57 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // useEffect(() => {
+  //   const loadAuth = async () => {
+  //     setIsLoading(true);
+  //     setError(null);
+  //     try {
+  //       //        const storedToken = await AsyncStorage.getItem('token');
+  //       const storedToken = storage.getString(tokenKey);
+  //       const storedUser = storage.getString(userKey); // if whern user restarta without network you’ll fail to set the user because getProfile() will throw.
+  //       if (storedToken) {
+  //         setToken(storedToken);
+  //         const profile = await getProfile();
+  //         setUser(profile);
+  //       }
+  //     } catch (e: any) {
+  //       console.error('Error loading auth:', e);
+  //       setError(
+  //         e.message?.includes('Network')
+  //           ? 'Network error during startup. Please check your connection.'
+  //           : 'Failed to load authentication data.',
+  //       );
+  //       // await AsyncStorage.clear();
+  //       storage.delete(tokenKey);
+
+  //       setUser(null);
+  //       setToken(null);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   loadAuth();
+  // }, []);
   useEffect(() => {
     const loadAuth = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const storedToken = await AsyncStorage.getItem('token');
+        const storedToken = storage.getString(tokenKey);
+        const storedUser = storage.getString(userKey); // if when user restarts without network you’ll fail to set the user because getProfile() will throw.
+
         if (storedToken) {
           setToken(storedToken);
-          const profile = await getProfile();
-          setUser(profile);
+
+          if (storedUser) {
+            setUser(JSON.parse(storedUser));
+          } else {
+            // fallback to API if no user stored
+            const profile = await getProfile();
+            setUser(profile);
+            storage.set(userKey, JSON.stringify(profile)); // keep it synced
+          }
         }
       } catch (e: any) {
         console.error('Error loading auth:', e);
@@ -61,7 +104,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             ? 'Network error during startup. Please check your connection.'
             : 'Failed to load authentication data.',
         );
-        await AsyncStorage.clear();
+        storage.delete(tokenKey);
+        storage.delete(userKey);
         setUser(null);
         setToken(null);
       } finally {
@@ -80,8 +124,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (data) {
         setToken(data.token);
         setUser(data.user);
-        await AsyncStorage.setItem('token', data.token);
-        await AsyncStorage.setItem('token', data.token);
+        //  await AsyncStorage.setItem('token', data.token);
+
+        storage.set(tokenKey, data.token);
+        storage.set(userKey, JSON.stringify(data.user));
+
         navigationRef.current?.navigate('TABS'); // or your main screen
       }
     } catch (e: any) {
@@ -104,7 +151,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await signup(name, email, password);
       setToken(data.token);
       setUser(data.user);
-      await AsyncStorage.setItem('token', data.token);
+      storage.set(tokenKey, data.token);
     } catch (e: any) {
       console.error('Sign up error:', e);
       setError(e.message || 'An unexpected error occurred during sign up.');
@@ -120,7 +167,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setUser(null);
       setToken(null);
-      AsyncStorage.clear();
+      // AsyncStorage.clear();
+      storage.delete(tokenKey);
+      storage.delete(userKey);
       navigationRef.current?.dispatch(
         CommonActions.reset({
           index: 0,

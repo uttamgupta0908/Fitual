@@ -29,6 +29,8 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import formatDate from '../utils/formateDate';
 import { API_URL } from '@env';
+import { tokenKey } from '~/constant';
+import { storage } from '~/storage/mmkv';
 
 if (
   Platform.OS === 'android' &&
@@ -124,7 +126,9 @@ export default function WorkoutRecord() {
     if (!workoutId) return;
     setDeleting(true);
     try {
-      const token = await AsyncStorage.getItem('token');
+      // const token = await AsyncStorage.getItem('token');
+      const token = storage.getString(tokenKey);
+
       const res = await fetch(`${API_URL}/workouts/${workoutId}`, {
         method: 'DELETE',
         headers: {

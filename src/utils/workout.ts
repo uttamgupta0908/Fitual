@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { API_URL } from '@env';
+import { storage } from '~/storage/mmkv';
+import { tokenKey } from '~/constant';
 
 export type WeightUnit = 'kg' | 'lbs';
 
@@ -48,8 +50,9 @@ export type WorkoutPayload = {
 };
 
 export const saveWorkoutToAPI = async (payload: WorkoutPayload) => {
-  const token = await AsyncStorage.getItem('token');
+  //   const token = await AsyncStorage.getItem('token');
 
+  const token = storage.getString(tokenKey);
   const response = await fetch(`${API_URL}/workouts`, {
     method: 'POST',
     headers: {
@@ -69,7 +72,9 @@ export const saveWorkoutToAPI = async (payload: WorkoutPayload) => {
 };
 
 export const fetchWorkoutsFromAPI = async (): Promise<Workout[]> => {
-  const token = await AsyncStorage.getItem('token');
+  //   const token = await AsyncStorage.getItem('token');
+
+  const token = storage.getString(tokenKey);
   const response = await fetch(`${API_URL}/workouts`, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -87,7 +92,9 @@ export const fetchWorkoutsFromAPI = async (): Promise<Workout[]> => {
 export const fetchWorkoutById = async (
   workoutId: string,
 ): Promise<Workout[]> => {
-  const token = await AsyncStorage.getItem('token');
+  //   const token = await AsyncStorage.getItem('token');
+
+  const token = storage.getString(tokenKey);
   const response = await fetch(`${API_URL}/workouts/${workoutId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
